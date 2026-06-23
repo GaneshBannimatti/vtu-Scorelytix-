@@ -116,6 +116,13 @@ def pass_analysis():
 def subject_analysis():
     return render_template('subject_analysis.html')
 
+
+@app.route('/subject-toppers')
+def subject_toppers():
+    return render_template(
+        'subject_toppers.html'
+    )
+
 @app.route('/download-toppers')
 def download_toppers():
 
@@ -164,6 +171,32 @@ def download_toppers():
         as_attachment=True
     )
 
+@app.route('/download-subject/<subject>')
+def download_subject(subject):
+
+    if not os.path.exists(EXCEL_FILE):
+        return "Results file not found", 404
+
+    df = pd.read_excel(EXCEL_FILE)
+
+    if subject not in df.columns:
+        return "Subject not found", 404
+
+    subject_df = df[
+        ["USN", "Name", subject]
+    ]
+
+    filename = f"ExcelFiles/{subject}.xlsx"
+
+    subject_df.to_excel(
+        filename,
+        index=False
+    )
+
+    return send_file(
+        filename,
+        as_attachment=True
+    )
 # =========================
 # Analytics API
 # =========================
@@ -307,7 +340,38 @@ def analytics():
                 "average": round(float(avg), 2)
             })
         print(subject_data)    
+    # ==========================
+# Subject Wise Toppers
+# ==========================
 
+        subject_toppers = []
+
+        for subject in mark_columns:
+
+            temp_df = df.copy()
+
+            temp_df[subject] = pd.to_numeric(
+                temp_df[subject],
+                errors="coerce"
+            )
+
+            topper_row = temp_df.loc[
+                temp_df[subject].idxmax()
+            ]
+
+            subject_toppers.append({
+
+                "subject": subject,
+
+                "name": str(
+                    topper_row["Name"]
+                ),
+
+                "marks": int(
+                    topper_row[subject]
+                )
+
+            })
         return jsonify({
 
     "total_students": int(total_students),
@@ -324,7 +388,9 @@ def analytics():
 
     "subject_data": subject_data,
 
-    "toppers_data": toppers_data
+    "toppers_data": toppers_data,
+
+    "subject_toppers": subject_toppers
 
 })
     except Exception as e:
