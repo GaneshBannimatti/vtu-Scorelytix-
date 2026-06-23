@@ -12,8 +12,19 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
         body {
-            background: #0f172a;
+            background:
+                radial-gradient(circle at top left, #1e3a8a, #0f172a 40%),
+                radial-gradient(circle at bottom right, #7c3aed, #111827 40%);
             color: white;
             min-height: 100vh;
         }
@@ -21,52 +32,219 @@
         .title {
             text-align: center;
             margin-top: 30px;
-            margin-bottom: 30px;
-            font-size: 3rem;
-            font-weight: bold;
+            font-size: 4rem;
+            font-weight: 800;
+
+            background: linear-gradient(90deg,
+                    #60a5fa,
+                    #a855f7,
+                    #ec4899);
+
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #cbd5e1;
+            margin-bottom: 40px;
+            font-size: 1.1rem;
         }
 
         .stat-card {
+
             background: rgba(255, 255, 255, 0.08);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
+
+            backdrop-filter: blur(20px);
+
+            border: 1px solid rgba(255, 255, 255, 0.1);
+
+            border-radius: 25px;
+
             padding: 25px;
+
             text-align: center;
-            transition: 0.3s;
+
+            transition: all .4s ease;
+
+            overflow: hidden;
+
+            position: relative;
+        }
+
+        .stat-card::before {
+
+            content: "";
+
+            position: absolute;
+
+            width: 150px;
+            height: 150px;
+
+            background: rgba(255, 255, 255, .08);
+
+            border-radius: 50%;
+
+            top: -50px;
+            right: -50px;
         }
 
         .stat-card:hover {
-            transform: translateY(-5px);
+
+            transform: translateY(-8px);
+
+            box-shadow:
+                0 15px 40px rgba(96, 165, 250, .3);
         }
 
         .stat-number {
-            font-size: 2.2rem;
-            font-weight: bold;
+
+            font-size: 3rem;
+
+            font-weight: 800;
         }
 
-        .chart-card {
-            background: rgba(255, 255, 255, 0.08);
-            border-radius: 20px;
-            padding: 20px;
-            margin-top: 20px;
+        .stat-label {
+
+            color: #cbd5e1;
+
+            font-size: 1rem;
         }
 
         .topper-card {
-            background: linear-gradient(135deg, #7c3aed, #2563eb);
-            border-radius: 20px;
+
+            background: linear-gradient(135deg,
+                    #f59e0b,
+                    #f97316);
+
+            border-radius: 25px;
+
+            padding: 30px;
+
+            margin-top: 30px;
+
+            box-shadow:
+                0 15px 35px rgba(245, 158, 11, .35);
+        }
+
+        .topper-card h3 {
+            font-weight: 700;
+        }
+
+        .chart-card {
+
+            background: rgba(255, 255, 255, .08);
+
+            backdrop-filter: blur(15px);
+
+            border: 1px solid rgba(255, 255, 255, .1);
+
+            border-radius: 25px;
+
             padding: 25px;
+
             margin-top: 25px;
+
+            transition: .3s;
+        }
+
+        .chart-card:hover {
+
+            transform: translateY(-5px);
         }
 
         .btn-custom {
-            border-radius: 12px;
-            margin: 5px;
+
+            border: none;
+
+            border-radius: 15px;
+
+            padding: 12px 22px;
+
+            font-weight: 600;
+
+            transition: .3s;
+        }
+
+        .btn-custom:hover {
+
+            transform: translateY(-3px);
+
+            box-shadow:
+                0 10px 25px rgba(255, 255, 255, .15);
         }
 
         canvas {
+
             background: white;
-            border-radius: 10px;
-            padding: 10px;
+
+            border-radius: 15px;
+
+            padding: 15px;
+        }
+
+        .quick-actions {
+
+            display: flex;
+
+            flex-wrap: wrap;
+
+            justify-content: center;
+
+            gap: 10px;
+        }
+
+        .footer {
+
+            text-align: center;
+
+            margin-top: 40px;
+
+            color: #94a3b8;
+
+            font-size: .9rem;
+        }
+
+        .sidebar {
+            min-height: 100vh;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(15px);
+            padding: 30px 15px;
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 30px;
+            font-weight: 700;
+            color: #60a5fa;
+        }
+
+        .sidebar a {
+            display: block;
+            color: white;
+            text-decoration: none;
+            padding: 12px 15px;
+            margin-bottom: 10px;
+            border-radius: 12px;
+            transition: .3s;
+        }
+
+        .sidebar a:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            transform: translateX(5px);
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            color: #94a3b8;
+        }
+
+        .stat-label {
+            margin-top: 10px;
+            color: #cbd5e1;
         }
     </style>
 
@@ -74,113 +252,182 @@
 
 <body>
 
-    <div class="container py-4">
-
-        <h1 class="title">
-            🚀 VTU Result Xalytor Dashboard
-        </h1>
-
-        <div class="row g-4">
-
-            <div class="col-md-3">
-                <div class="stat-card">
-                    <div id="total" class="stat-number">0</div>
-                    <div>Total Students</div>
-                </div>
-            </div>
-
-            <div class="col-md-3">
-                <div class="stat-card">
-                    <div id="passed" class="stat-number text-success">0</div>
-                    <div>Passed</div>
-                </div>
-            </div>
-
-            <div class="col-md-3">
-                <div class="stat-card">
-                    <div id="failed" class="stat-number text-danger">0</div>
-                    <div>Failed</div>
-                </div>
-            </div>
-
-            <div class="col-md-3">
-                <div class="stat-card">
-                    <div id="pass" class="stat-number text-info">0%</div>
-                    <div>Pass Percentage</div>
-                </div>
-            </div>
-
-        </div>
-
-        <div class="topper-card">
-
-            <h3>🏆 Class Topper</h3>
-
-            <h2 id="topperName">Loading...</h2>
-
-            <h5 id="topperMarks">Marks : 0</h5>
-
-        </div>
+    <div class="container-fluid">
 
         <div class="row">
 
-            <div class="col-md-6">
+            <!-- Sidebar -->
 
-                <div class="chart-card">
+            <div class="col-md-2 sidebar">
 
-                    <h4 class="mb-3">
-                        Pass vs Fail Analysis
-                    </h4>
+                <h3 class="logo">
+                    🎓 Scorelytix
+                </h3>
 
-                    <canvas id="resultChart"></canvas>
+                <a href="/dashboard">📊 Dashboard</a>
 
-                </div>
+                <a href="/toppers">🏆 Toppers</a>
 
-            </div>
+                <a href="/pass-analysis">📈 Pass Analysis</a>
 
-            <div class="col-md-6">
+                <a href="/subject-analysis">📚 Subject Analysis</a>
 
-                <div class="chart-card">
-
-                    <h4 class="mb-3">
-                        Subject Wise Performance
-                    </h4>
-
-                    <canvas id="subjectChart"></canvas>
-
-                </div>
+                <a href="/download">⬇ Download Excel</a>
 
             </div>
 
-        </div>
+            <!-- Main Content -->
 
-        <div class="chart-card text-center">
+            <div class="col-md-10 p-4">
 
-            <h4>Quick Actions</h4>
+                <h1 class="title">
+                    VTU Scorelytix
+                </h1>
 
-            <a href="/" class="btn btn-primary btn-custom">
-                Home
-            </a>
+                <p class="subtitle">
+                    Advanced Academic Analytics Platform
+                </p>
 
-            <a href="/download" class="btn btn-success btn-custom">
-                Download Excel
-            </a>
+                <!-- Statistics Cards -->
 
-            <a href="/toppers" class="btn btn-warning btn-custom">
-                Toppers List
-            </a>
+                <div class="row g-4">
 
-            <a href="/pass-analysis" class="btn btn-info btn-custom">
-                Pass Analysis
-            </a>
+                    <div class="col-md-3">
+                        <div class="stat-card">
+                            <div id="total" class="stat-number">0</div>
+                            <div class="stat-label">
+                                👨‍🎓 Total Students
+                            </div>
+                        </div>
+                    </div>
 
-            <a href="/subject-analysis" class="btn btn-secondary btn-custom">
-                Subject Analysis
-            </a>
+                    <div class="col-md-3">
+                        <div class="stat-card">
+                            <div id="passed" class="stat-number text-success">
+                                0
+                            </div>
+                            <div class="stat-label">
+                                ✅ Passed
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="stat-card">
+                            <div id="failed" class="stat-number text-danger">
+                                0
+                            </div>
+                            <div class="stat-label">
+                                ❌ Failed
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="stat-card">
+                            <div id="pass" class="stat-number text-info">
+                                0%
+                            </div>
+                            <div class="stat-label">
+                                📈 Pass Percentage
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Topper Card -->
+
+                <div class="topper-card mt-4">
+
+                    <h5>
+                        🏆 TOP RANKER
+                    </h5>
+
+                    <h1 id="topperName">
+                        Loading...
+                    </h1>
+
+                    <h3 id="topperMarks">
+                        Marks : 0
+                    </h3>
+
+                </div>
+
+                <!-- Charts -->
+
+                <div class="row mt-4">
+
+                    <div class="col-md-6">
+
+                        <div class="chart-card">
+
+                            <h4 class="mb-3">
+                                📊 Pass vs Fail Analysis
+                            </h4>
+
+                            <canvas id="resultChart"></canvas>
+
+                        </div>
+
+                    </div>
+
+                    <div class="col-md-6">
+
+                        <div class="chart-card">
+
+                            <h4 class="mb-3">
+                                📚 Subject Wise Performance
+                            </h4>
+
+                            <canvas id="subjectChart"></canvas>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- Quick Actions -->
+
+                <div class="chart-card text-center mt-4">
+
+                    <h4 class="mb-4">
+                        ⚡ Quick Actions
+                    </h4>
+
+                    <a href="/" class="btn btn-primary btn-custom">
+                        Home
+                    </a>
+
+                    <a href="/download" class="btn btn-success btn-custom">
+                        Download Excel
+                    </a>
+
+                    <a href="/toppers" class="btn btn-warning btn-custom">
+                        Toppers List
+                    </a>
+
+                    <a href="/pass-analysis" class="btn btn-info btn-custom">
+                        Pass Analysis
+                    </a>
+
+                    <a href="/subject-analysis" class="btn btn-secondary btn-custom">
+                        Subject Analysis
+                    </a>
+
+                </div>
+
+                <div class="footer mt-4">
+                    Developed by Ganesh Bannimatti 🚀
+                </div>
+
+            </div>
 
         </div>
 
     </div>
+
 
     <script>
 
