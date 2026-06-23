@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>VTU Result Xalytor</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Bootstrap 5 CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg,
+                    #0f172a,
+                    #1e293b,
+                    #2563eb);
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: "";
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            background: #60a5fa;
+            border-radius: 50%;
+            top: -150px;
+            left: -100px;
+            filter: blur(150px);
+            opacity: .35;
+        }
+
+        body::after {
+            content: "";
+            position: absolute;
+            width: 350px;
+            height: 350px;
+            background: #8b5cf6;
+            border-radius: 50%;
+            bottom: -120px;
+            right: -100px;
+            filter: blur(150px);
+            opacity: .35;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, .08);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, .15);
+            border-radius: 30px;
+            color: white;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, .35);
+        }
+
+        .form-control {
+            background: rgba(255, 255, 255, .1);
+            border: none;
+            color: white;
+            border-radius: 12px;
+        }
+
+        .form-control:focus {
+            background: rgba(255, 255, 255, .15);
+            color: white;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, .4);
+        }
+
+        .form-control::placeholder {
+            color: #cbd5e1;
+        }
+
+        .form-label {
+            color: white;
+            font-weight: 600;
+        }
+
+        .btn-primary {
+            border: none;
+            border-radius: 12px;
+            background: linear-gradient(135deg,
+                    #2563eb,
+                    #7c3aed);
+            font-weight: 600;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn-success {
+            border-radius: 12px;
+        }
+
+        .btn-warning {
+            border-radius: 12px;
+        }
+
+        .footer {
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container d-flex align-items-center justify-content-center" style="min-height: 100vh;">
+        <div class="card p-4" style="width: 100%; max-width: 650px;">
+            <div class="text-center">
+                <div class="text-center mb-4">
+
+                    <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" style="
+         width:90px;
+         height:90px;
+         border-radius:50%;
+         border:4px solid rgba(255,255,255,.2);
+         ">
+
+                    <h1 style="
+    font-weight:700;
+    margin-top:15px;
+    color:white;
+    ">
+                        🚀 VTU Result Xalytor
+                    </h1>
+
+                    <p style="color:#cbd5e1;">
+                        Smart VTU Result Analytics Platform
+                    </p>
+
+                </div>
+                <div class="mb-3 text-muted" style="font-size:1.1em;">Automate your VTU result downloads</div>
+            </div>
+            <form id="scraperForm" autocomplete="off">
+                <div class="mb-3">
+                    <label for="college" class="form-label"><i class="bi bi-building"></i> College Code</label>
+                    <input type="text" class="form-control" id="college" name="college" required>
+                </div>
+                <div class="mb-3">
+                    <label for="year" class="form-label"><i class="bi bi-calendar"></i> Year</label>
+                    <input type="text" class="form-control" id="year" name="year" required>
+                </div>
+                <div class="mb-3">
+                    <label for="branch" class="form-label"><i class="bi bi-diagram-3"></i> Branch</label>
+                    <input type="text" class="form-control" id="branch" name="branch" required>
+                </div>
+                <div class="mb-3">
+                    <label for="low" class="form-label"><i class="bi bi-arrow-down"></i> Starting USN (number)</label>
+                    <input type="number" class="form-control" id="low" name="low" required>
+                </div>
+                <div class="mb-3">
+                    <label for="high" class="form-label"><i class="bi bi-arrow-up"></i> Last USN (number)</label>
+                    <input type="number" class="form-control" id="high" name="high" required>
+                </div>
+                <!-- ✅ Semester field restricted to 1–8 -->
+                <!-- Semester -->
+                <div class="mb-3">
+                    <label for="semc" class="form-label">
+                        <i class="bi bi-123"></i> Semester
+                    </label>
+
+                    <input type="number" class="form-control" id="semc" name="semc" required min="1" max="8"
+                        oninput="if(this.value.length > 1) this.value = this.value.slice(0, 1);"
+                        placeholder="Enter semester (1-8)">
+                </div>
+
+                <!-- VTU Result URL -->
+                <div class="mb-3">
+                    <label for="result_url" class="form-label">
+                        <i class="bi bi-link-45deg"></i> VTU Result URL
+                    </label>
+
+                    <input type="url" class="form-control" id="result_url" name="result_url" required
+                        placeholder="https://results.vtu.ac.in/xxxx/index.php">
+                </div>
+                <button type="submit" class="btn btn-primary w-100 py-3">
+                    🚀 Start Scraping
+                </button>
+            </form>
+            <div id="output" class="text-center mt-3"></div>
+            <div id="progressSection" class="mt-3" style="display:none;">
+                <div class="d-flex align-items-center">
+                    <div class="spinner-border text-primary me-2" role="status" style="width: 1.5rem; height: 1.5rem;">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <span>Fetching results, please wait...</span>
+                </div>
+                <div class="progress mt-2">
+                    <div class="progress-bar progress-bar-striped progress-bar-animated bg-primary" style="width: 100%">
+                    </div>
+                </div>
+            </div>
+            <button id="downloadBtn" class="btn btn-success w-100 mt-3" style="display:none;">
+                Download Excel File
+            </button>
+
+            <a href="/dashboard" id="dashboardBtn" class="btn btn-warning w-100 mt-2" style="display:none;">
+                View Analytics Dashboard
+            </a>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+        <div id="toastDownload" class="toast align-items-center text-bg-success border-0" role="alert"
+            aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body">
+                    ✅ Scraping complete! You can now download the results.
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
+                    aria-label="Close"></button>
+            </div>
+        </div>
+    </div>
+
+
+    <footer class="footer text-center mt-4 mb-2">
+        &copy; 2025 <b>The Scrappers</b>. All rights reserved.
+    </footer>
+
+
+    <!-- Bootstrap Icons CDN -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // ✅ List of all valid VTU college codes
+        const validCollegeCodes = [
+            "1AP", "1AY", "1AA", "1AO", "1AH", "1AJ", "1AN", "1AK", "1AC", "1AM", "1AR", "1AT", "1BG", "1BT", "1BC", "1BI", "1BH", "1TA", "1PC", "1BM", "1BE", "1BY", "1BQ", "1BO", "1CK", "1CR", "1CD", "1CG", "1CE", "1DT", "1DS", "1DB", "1DA", "1CC", "1GV", "1EC", "1EP", "1EE", "1EW", "1GC", "1GA", "1GD", "1GO", "1SK", "1SE", "1GT", "1GG", "1HK", "1HM", "1IC", "1IS", "1II", "1JV", "1JS", "1JT", "1KF", "1KG", "1KS", "1KI", "1KN", "1ME", "1MS", "1MJ", "1NC", "1AU", "1NH", "1NT", "1OX", "1PN", "1PI", "1PE", "1RI", "1RL", "1RR", "1RV", "1RG", "1RE", "1RN", "1SJ", "1VA", "1ST", "1SZ", "1SG", "1SC", "1SP", "1HS", "1PL", "1SV", "1SI", "1MV", "1JB", "1KT", "1RC", "1SB", "1VE", "1VG", "1VB", "1TJ", "1VI", "1VJ", "1VK", "1YD",
+            "2AV", "2AG", "2AB", "2BV", "2BA", "2BL", "2GP", "2GO", "2GB", "2HN", "2JI", "2JM", "2KD", "2KL", "2KE", "2GI", "2MB", "2MM", "2RH", "2BU", "2SR", "2SD", "2SA", "2HA", "2KA", "2TG", "2VS", "2VD",
+            "3AE", "3BK", "3BR", "3RB", "3GF", "3GU", "3GN", "3KC", "3KB", "3LA", "3NA", "3PD", "3PG", "3VC", "3TS", "3SL", "3VN",
+            "4ED", "4CA", "4MA", "4AD", "4AI", "4AL", "4BW", "4BB", "4BD", "4BP", "4CB", "4CI", "4EK", "4MG", "4GM", "4GE", "4GH", "4GL", "4GK", "4GR", "4GW", "4JN", "4KV", "4KM", "4MH", "4MC", "4MT", "4MK", "4MO", "4NE", "4NI", "4NN", "4NM", "4PA", "4PS", "4PM", "4PR", "4RA", "4SH", "4MW", "4SM", "4SU", "4JC", "4JE", "4SN", "4ES", "4SO", "4UB", "4VV", "4VM", "4VP", "4CM", "4YG", "4DM"
+        ];
+
+        const form = document.getElementById('scraperForm');
+        const collegeInput = document.getElementById('college');
+        const output = document.getElementById('output');
+        const downloadBtn = document.getElementById('downloadBtn');
+        const dashboardBtn = document.getElementById('dashboardBtn');
+        const progressSection = document.getElementById('progressSection');
+        const toastDownload = new bootstrap.Toast(document.getElementById('toastDownload'));
+
+        // 🟢 Auto-uppercase college code as user types
+        collegeInput.addEventListener('input', () => {
+            collegeInput.value = collegeInput.value.toUpperCase();
+            const code = collegeInput.value.trim();
+            if (code.length >= 2) {
+                if (validCollegeCodes.includes(code)) {
+                    collegeInput.classList.remove('is-invalid');
+                    collegeInput.classList.add('is-valid');
+                } else {
+                    collegeInput.classList.remove('is-valid');
+                    collegeInput.classList.add('is-invalid');
+                }
+            } else {
+                collegeInput.classList.remove('is-valid', 'is-invalid');
+            }
+        });
+
+        window.onload = function () {
+            downloadBtn.style.display = "none";
+            dashboardBtn.style.display = "none";
+            progressSection.style.display = "none";
+        };
+
+        form.addEventListener('submit', async function (e) {
+            e.preventDefault();
+            const collegeCode = collegeInput.value.trim().toUpperCase();
+
+            // ✅ Validate college code
+            if (!validCollegeCodes.includes(collegeCode)) {
+                output.innerHTML = `
+                <div class="alert alert-danger mt-3" role="alert">
+                    ⚠️ Invalid College Code: <strong>${collegeCode}</strong><br>
+                    Please enter a valid VTU college code.
+                </div>
+            `;
+                progressSection.style.display = "none";
+                downloadBtn.style.display = "none";
+                return;
+            }
+
+            // ✅ Proceed if valid
+            output.innerHTML = "";
+            progressSection.style.display = "block";
+            downloadBtn.style.display = "none";
+
+            const formData = new FormData(form);
+            await fetch('/run-scraper', {
+                method: 'POST',
+                body: formData
+            });
+
+            // ⏳ Poll every 5 seconds to check if the file is ready
+            const poll = setInterval(async () => {
+                const res = await fetch('/download', { method: 'HEAD' });
+                if (res.status === 200) {
+                    clearInterval(poll);
+
+                    progressSection.style.display = "none";
+                    output.innerHTML = "";
+
+                    downloadBtn.style.display = "block";
+                    dashboardBtn.style.display = "block";
+
+                    toastDownload.show();
+                }
+            }, 5000);
+        });
+
+        downloadBtn.onclick = function () {
+            window.location.href = '/download';
+        };
+
+        dashboardBtn.onclick = function () {
+            window.location.href = '/dashboard';
+        };
+    </script>
+</body>
+
+</html>
