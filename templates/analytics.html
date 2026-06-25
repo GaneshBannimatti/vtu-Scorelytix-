@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html lang="en">
 
@@ -27,11 +26,72 @@
                 radial-gradient(circle at bottom right, #7c3aed, #111827 40%);
             color: white;
             min-height: 100vh;
+            overflow-x: hidden;
         }
+
+        .container-fluid {
+            max-width: 100%;
+            padding: 20px;
+        }
+
+        .row {
+            margin: 0;
+        }
+
+        /* =========================
+SIDEBAR
+========================= */
+
+        .sidebar {
+            background: rgba(15, 23, 42, .92);
+            backdrop-filter: blur(20px);
+            border-right: 1px solid rgba(255, 255, 255, .08);
+            min-height: 100vh;
+            padding: 25px 15px;
+            transition: .4s;
+        }
+
+        .logo {
+            text-align: center;
+            font-size: 2rem;
+            font-weight: 700;
+            color: #60a5fa;
+            margin-bottom: 35px;
+        }
+
+        .sidebar a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #e2e8f0;
+            text-decoration: none;
+            padding: 14px 18px;
+            margin-bottom: 10px;
+            border-radius: 14px;
+            transition: .3s;
+            font-weight: 500;
+        }
+
+        .sidebar a:hover {
+            background: linear-gradient(90deg,
+                    #2563eb,
+                    #7c3aed);
+            color: white;
+            transform: translateX(5px);
+        }
+
+        .sidebar a.active {
+            background: linear-gradient(90deg,
+                    #2563eb,
+                    #7c3aed);
+        }
+
+        /* =========================
+TITLE
+========================= */
 
         .title {
             text-align: center;
-            margin-top: 30px;
             font-size: 4rem;
             font-weight: 800;
 
@@ -47,210 +107,294 @@
         .subtitle {
             text-align: center;
             color: #cbd5e1;
-            margin-bottom: 40px;
-            font-size: 1.1rem;
+            margin-bottom: 35px;
         }
+
+        /* =========================
+STATS
+========================= */
 
         .stat-card {
-
-            background: rgba(255, 255, 255, 0.08);
-
-            backdrop-filter: blur(20px);
-
-            border: 1px solid rgba(255, 255, 255, 0.1);
-
-            border-radius: 25px;
-
-            padding: 25px;
-
-            text-align: center;
-
-            transition: all .4s ease;
-
-            overflow: hidden;
-
-            position: relative;
-        }
-
-        .stat-card::before {
-
-            content: "";
-
-            position: absolute;
-
-            width: 150px;
-            height: 150px;
-
             background: rgba(255, 255, 255, .08);
-
-            border-radius: 50%;
-
-            top: -50px;
-            right: -50px;
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, .08);
+            border-radius: 24px;
+            padding: 25px;
+            text-align: center;
+            transition: .3s;
+            height: 100%;
         }
 
         .stat-card:hover {
-
             transform: translateY(-8px);
-
             box-shadow:
-                0 15px 40px rgba(96, 165, 250, .3);
+                0 15px 35px rgba(0, 0, 0, .25);
         }
 
         .stat-number {
-
             font-size: 3rem;
-
             font-weight: 800;
         }
 
         .stat-label {
-
             color: #cbd5e1;
-
-            font-size: 1rem;
+            margin-top: 10px;
         }
 
-        .topper-card {
+        /* =========================
+TOPPER
+========================= */
 
+        .topper-card {
             background: linear-gradient(135deg,
                     #f59e0b,
                     #f97316);
 
-            border-radius: 25px;
-
+            border-radius: 24px;
             padding: 30px;
-
-            margin-top: 30px;
-
-            box-shadow:
-                0 15px 35px rgba(245, 158, 11, .35);
-        }
-
-        .topper-card h3 {
-            font-weight: 700;
-        }
-
-        .chart-card {
-
-            background: rgba(255, 255, 255, .08);
-
-            backdrop-filter: blur(15px);
-
-            border: 1px solid rgba(255, 255, 255, .1);
-
-            border-radius: 25px;
-
-            padding: 25px;
-
             margin-top: 25px;
 
-            transition: .3s;
+            box-shadow:
+                0 15px 35px rgba(245, 158, 11, .30);
         }
 
-        .chart-card:hover {
+        /* =========================
+CHARTS
+========================= */
 
-            transform: translateY(-5px);
+        .chart-card {
+            background: rgba(255, 255, 255, .08);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, .08);
+            border-radius: 24px;
+            padding: 20px;
+            margin-top: 25px;
+            height: 100%;
         }
+
+        .chart-card h4 {
+            margin-bottom: 15px;
+        }
+
+        canvas {
+            background: white;
+            border-radius: 15px;
+            padding: 10px;
+        }
+
+        #resultChart {
+            height: 300px !important;
+            max-height: 300px;
+        }
+
+        #subjectChart {
+            width: 100% !important;
+            height: 320px !important;
+        }
+
+        /* =========================
+BUTTONS
+========================= */
 
         .btn-custom {
-
             border: none;
-
-            border-radius: 15px;
-
-            padding: 12px 22px;
-
+            border-radius: 12px;
+            padding: 12px 20px;
             font-weight: 600;
-
             transition: .3s;
         }
 
         .btn-custom:hover {
-
             transform: translateY(-3px);
-
-            box-shadow:
-                0 10px 25px rgba(255, 255, 255, .15);
-        }
-
-        canvas {
-
-            background: white;
-
-            border-radius: 15px;
-
-            padding: 15px;
         }
 
         .quick-actions {
-
             display: flex;
-
-            flex-wrap: wrap;
-
             justify-content: center;
-
+            flex-wrap: wrap;
             gap: 10px;
         }
 
-        .footer {
-
-            text-align: center;
-
-            margin-top: 40px;
-
-            color: #94a3b8;
-
-            font-size: .9rem;
-        }
-
-        .sidebar {
-            min-height: 100vh;
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(15px);
-            padding: 30px 15px;
-            border-right: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .logo {
-            text-align: center;
-            margin-bottom: 30px;
-            font-weight: 700;
-            color: #60a5fa;
-        }
-
-        .sidebar a {
-            display: block;
-            color: white;
-            text-decoration: none;
-            padding: 12px 15px;
-            margin-bottom: 10px;
-            border-radius: 12px;
-            transition: .3s;
-        }
-
-        .sidebar a:hover {
-            background: rgba(255, 255, 255, 0.1);
-            color: white;
-            transform: translateX(5px);
-        }
+        /* =========================
+FOOTER
+========================= */
 
         .footer {
             text-align: center;
-            margin-top: 30px;
+            padding: 15px;
             color: #94a3b8;
         }
 
-        .stat-label {
-            margin-top: 10px;
-            color: #cbd5e1;
+        /* =========================
+MENU BUTTON
+========================= */
+
+        .menu-btn {
+            display: none;
+        }
+
+        /* =========================
+ULTRA WIDE SCREEN
+========================= */
+
+        @media(min-width:1600px) {
+
+            .title {
+                font-size: 5rem;
+            }
+
+            .stat-number {
+                font-size: 4rem;
+            }
+
+            .chart-card {
+                padding: 25px;
+                margin-bottom: 20px;
+            }
+        }
+
+        /* =========================
+DESKTOP
+========================= */
+
+        @media(max-width:1200px) {
+
+            .title {
+                font-size: 3.2rem;
+            }
+
+        }
+
+        /* =========================
+TABLET
+========================= */
+
+        @media(max-width:992px) {
+
+            .title {
+                font-size: 2.8rem;
+            }
+
+            .stat-number {
+                font-size: 2.2rem;
+            }
+
+        }
+
+        /* =========================
+MOBILE
+========================= */
+
+        @media(max-width:768px) {
+
+            .menu-btn {
+                display: block;
+                position: fixed;
+                top: 15px;
+                left: 15px;
+                z-index: 99999;
+
+                background: #2563eb;
+                color: white;
+
+                border: none;
+
+                padding: 10px 15px;
+
+                border-radius: 10px;
+
+                font-size: 20px;
+            }
+
+            .sidebar {
+                position: fixed;
+                top: 0;
+                left: -260px;
+                width: 260px;
+                height: 100vh;
+                z-index: 9999;
+            }
+
+            .sidebar.active {
+                left: 0;
+            }
+
+            .title {
+                font-size: 2rem;
+                margin-top: 50px;
+            }
+
+            .subtitle {
+                font-size: .9rem;
+            }
+
+            .stat-number {
+                font-size: 2rem;
+            }
+
+            .quick-actions {
+                flex-direction: column;
+            }
+
+            .btn-custom {
+                width: 100%;
+            }
+
+            #resultChart {
+                height: 220px !important;
+            }
+
+            #subjectChart {
+                height: 260px !important;
+            }
+        }
+
+        /* =========================
+SMALL MOBILE
+========================= */
+
+        @media(max-width:576px) {
+
+            .title {
+                font-size: 1.6rem;
+            }
+
+            .stat-card {
+                padding: 18px;
+            }
+
+            .topper-card {
+                padding: 20px;
+            }
+
+            body {
+                overflow-x: hidden;
+            }
+
+            html {
+                scroll-behavior: smooth;
+            }
+
+            .main-content {
+                overflow-x: hidden;
+            }
+
+            .quick-actions {
+                margin-bottom: 10px;
+            }
+
+            .chart-card:last-child {
+                margin-bottom: 0;
+            }
         }
     </style>
 
 </head>
 
 <body>
+    <button class="menu-btn" onclick="toggleSidebar()">
+        ☰
+    </button>
 
     <div class="container-fluid">
 
@@ -258,7 +402,7 @@
 
             <!-- Sidebar -->
 
-            <div class="col-md-2 sidebar">
+            <div id="sidebar" class="col-lg-2 col-md-3 sidebar">
 
                 <h3 class="logo">
                     🎓 Scorelytix
@@ -275,12 +419,12 @@
                 <a href="/subject-toppers">🎖 Subject Toppers</a>
 
                 <a href="/download">⬇ Download Excel</a>
-                
+
             </div>
 
             <!-- Main Content -->
 
-            <div class="col-md-10 p-4">
+            <div class="col-lg-10 col-md-9 col-12 p-4">
 
                 <h1 class="title">
                     VTU Scorelytix
@@ -294,7 +438,7 @@
 
                 <div class="row g-4">
 
-                    <div class="col-md-3">
+                    <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 col-12">
                         <div class="stat-card">
                             <div id="total" class="stat-number">0</div>
                             <div class="stat-label">
@@ -303,7 +447,7 @@
                         </div>
                     </div>
 
-                    <div class="col-md-3">
+                    <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 col-12">
                         <div class="stat-card">
                             <div id="passed" class="stat-number text-success">
                                 0
@@ -314,7 +458,7 @@
                         </div>
                     </div>
 
-                    <div class="col-md-3">
+                    <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 col-12">
                         <div class="stat-card">
                             <div id="failed" class="stat-number text-danger">
                                 0
@@ -325,7 +469,7 @@
                         </div>
                     </div>
 
-                    <div class="col-md-3">
+                    <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 col-12">
                         <div class="stat-card">
                             <div id="pass" class="stat-number text-info">
                                 0%
@@ -360,7 +504,7 @@
 
                 <div class="row mt-4">
 
-                    <div class="col-md-6">
+                    <div class="col-xl-6 col-lg-12 col-md-12 col-12">
 
                         <div class="chart-card">
 
@@ -374,7 +518,7 @@
 
                     </div>
 
-                    <div class="col-md-6">
+                    <div class="col-xl-6 col-lg-12 col-md-12 col-12">
 
                         <div class="chart-card">
 
@@ -424,9 +568,9 @@
 
                 </div>
 
-                <div class="footer mt-4">
-                    🚀
-                </div>
+                <footer class="footer">
+                    Developed ❤️
+                </footer>
 
             </div>
 
@@ -515,10 +659,17 @@
                 alert("Analytics data not available.");
 
             });
+        function toggleSidebar() {
+
+            document
+                .getElementById("sidebar")
+                .classList
+                .toggle("active");
+
+        }
 
     </script>
 
 </body>
 
 </html>
-```

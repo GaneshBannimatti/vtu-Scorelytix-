@@ -117,6 +117,34 @@ def subject_analysis():
     return render_template('subject_analysis.html')
 
 
+@app.route('/student/<usn>')
+def student(usn):
+
+    if not os.path.exists(EXCEL_FILE):
+        return jsonify({
+            "error": "Results file not found"
+        })
+
+    df = pd.read_excel(EXCEL_FILE)
+    
+    student = df[
+        df["USN"]
+        .astype(str)
+        .str.strip()
+        .str.upper()
+        ==
+        usn.strip().upper()
+    ]
+
+    if student.empty:
+        return jsonify({
+            "error": "Student not found"
+        })
+
+    return jsonify(
+        student.iloc[0].to_dict()
+    )
+
 @app.route('/subject-toppers')
 def subject_toppers():
     return render_template(
@@ -221,7 +249,7 @@ def analytics():
 
         mark_columns = []
 
-        print(df.columns.tolist())
+        #print(df.columns.tolist())
 
         for col in df.columns:
 
@@ -241,10 +269,10 @@ def analytics():
                 if numeric_data.notna().sum() > 0:
                     mark_columns.append(col)
 
-        print("Subjects Found:", mark_columns)
+        #print("Subjects Found:", mark_columns)
 
         # Pass / Fail Calculation
-        print(df["Result"].tolist())
+        #print(df["Result"].tolist())
         passed_students = (
             df["Result"]
             .astype(str)
@@ -262,9 +290,9 @@ def analytics():
             .eq("F")
             .sum()
         )
-        print("Passed:", passed_students)
-        print("Failed:", failed_students)
-        print(df["Result"].value_counts())
+        #print("Passed:", passed_students)
+        #print("Failed:", failed_students)
+        #print(df["Result"].value_counts())
 
         # Pass Percentage
         pass_percentage = 0
@@ -339,10 +367,11 @@ def analytics():
                 "subject": str(col),
                 "average": round(float(avg), 2)
             })
-        print(subject_data)    
-    # ==========================
-# Subject Wise Toppers
-# ==========================
+            #print(subject_data)
+
+        # ==========================
+        # Subject Wise Toppers
+        # ==========================
 
         subject_toppers = []
 
@@ -363,13 +392,9 @@ def analytics():
 
                 "subject": subject,
 
-                "name": str(
-                    topper_row["Name"]
-                ),
+                "name": str(topper_row["Name"]),
 
-                "marks": int(
-                    topper_row[subject]
-                )
+                "marks": int(topper_row[subject])
 
             })
         return jsonify({
