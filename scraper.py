@@ -17,7 +17,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from webdriver_manager.chrome import ChromeDriverManager
 from openpyxl import Workbook
-from openpyxl.styles import Font, Alignment
+from openpyxl.styles import Font, Alignment, PatternFill
 
 # --- Set Tesseract OCR path ---
 pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
@@ -227,6 +227,12 @@ if results:
     header.append("Result")
 
     ws.append(header)
+    
+    red_fill = PatternFill(
+    start_color="FF4D4D",
+    end_color="FF4D4D",
+    fill_type="solid"
+    )
 
     for student in results:
 
@@ -241,14 +247,19 @@ if results:
 
             row.append(subject["total"])
 
-            result_value = str(subject["result"]).strip().upper()
-
-            if result_value in ["F", "FAIL", "FAILED"]:
+            if subject["result"] == "F":
                 final_result = "F"
 
         row.append(final_result)
 
         ws.append(row)
+
+        current_row = ws.max_row
+
+        if final_result == "F":
+
+            for cell in ws[current_row]:
+                cell.fill = red_fill
 
     os.makedirs("ExcelFiles", exist_ok=True)
 
