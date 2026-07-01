@@ -103,112 +103,220 @@ def solve_captcha(image_path: str) -> str:
     return clean_captcha(captcha_text)
 
 # --- Fetch result for a single USN ---
+# --- Fetch result for a single USN ---
 def fetch_result(usn: str):
+
     while True:
+
         try:
+
             driver.get(url)
-            WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "lns")))
+
+            WebDriverWait(driver, 10).until(
+                EC.presence_of_element_located((By.NAME, "lns"))
+            )
+
+            # -------------------------
             # Enter USN
+            # -------------------------
+
             usn_input = driver.find_element(By.NAME, "lns")
             usn_input.clear()
             usn_input.send_keys(usn)
-            # Get CAPTCHA image and solve
-            captcha_img = driver.find_element(By.XPATH, "//img[@alt='CAPTCHA code']")
+
+            # -------------------------
+            # Solve Captcha
+            # -------------------------
+
+            captcha_img = driver.find_element(
+                By.XPATH,
+                "//img[@alt='CAPTCHA code']"
+            )
+
             captcha_img.screenshot("cap.png")
+
             captcha_text = solve_captcha("cap.png")
-            if not captcha_text or len(captcha_text) < 4:
-                print(f"OCR failed for {usn}, retrying...")
-                time.sleep(1)
+
+            if len(captcha_text) < 4:
+                print("OCR Failed...")
                 continue
+
             print(f"OCR detected captcha for {usn}: {captcha_text}")
+
             cap_input = driver.find_element(By.NAME, "captchacode")
             cap_input.clear()
             cap_input.send_keys(captcha_text)
+
             driver.find_element(By.ID, "submit").click()
+
             time.sleep(2)
 
-            # Handle alerts (invalid captcha or invalid USN)
+            # -------------------------
+            # Handle Alerts
+            # -------------------------
+
             try:
+
                 alert = driver.switch_to.alert
-                alert_text = alert.text
+
+                txt = alert.text
+
                 alert.accept()
-                if "Invalid captcha" in alert_text:
-                    print(f"❌ Invalid captcha for {usn}, retrying...")
-                    time.sleep(1)
+
+                if "Invalid captcha" in txt:
+
+                    print("❌ Invalid captcha...Retrying")
                     continue
-                elif "University Seat Number" in alert_text:
-                    print(f"No result for {usn}")
+
+                if "University Seat Number" in txt:
+
+                    print(f"No Result : {usn}")
                     return None
+
             except:
                 pass
 
-            # Parse page
+            # -------------------------
+            # Parse HTML
+            # -------------------------
+
             soup = BeautifulSoup(driver.page_source, "html.parser")
+
             with open("page.html", "w", encoding="utf-8") as f:
                 f.write(driver.page_source)
 
-            print("HTML saved to page.html")
-            tds = soup.find_all("td")
-            divs = soup.find_all("div", attrs={"class": "col-md-12"})
-            divCell = soup.find_all("div", attrs={"class": "divTableCell"})
-
-            if len(tds) == 0:
-               print(f"Invalid data for {usn}")
-               return None
-
-# Semester validation disabled because URL is supplied by user
-            try:
-                if len(divs) >= 6:
-                    sem = divs[5].div.text.strip()
-                    print(f"Detected Semester: {sem}")
-            except Exception as e:
-                print(f"Could not detect semester: {e}")
-
             student = {}
 
-            student["USN"] = tds[1].text.replace(":", "").strip()
-            student["Name"] = tds[3].text.replace(":", "").strip()
+            # -------------------------
+            # Student Details
+            # -------------------------
+
+            info_rows = soup.select(".divTableRow")
+
+            for row in info_rows:
+
+                cells = row.select(".divTableCell")
+
+                if len(cells) != 2:
+                    continue
+
+                key = cells[0].get_text(" ", strip=True)
+                value = cells[1].get_text(" ", strip=True)
+
+                if "University Seat Number" in key:
+                    student["USN"] = value
+
+                elif "Student Name" in key:
+                    student["Name"] = value
+
+            if "USN" not in student:
+
+                print(f"⚠️ Couldn't read {usn}. Retrying...")
+
+                time.sleep(2)
+
+                continue
+
+            print(student)
+                        # -------------------------
+            # Semester
+            # -------------------------
+
+            semester = ""
+
+            sem_tag = soup.find("b", string=lambda x: x and "Semester" in x)
+
+            if sem_tag:
+                semester = sem_tag.get_text(strip=True)
+
+            student["Semester"] = semester
+
+            # -------------------------
+            # Subject Details
+            # -------------------------
 
             subjects = []
 
             rows = soup.find_all("div", class_="divTableRow")
 
-            for row in rows[1:]:
+            for row in rows:
 
                 cells = row.find_all("div", class_="divTableCell")
 
-                if len(cells) >= 7:
+                if len(cells) != 7:
+                    continue
 
-                    subjects.append({
+                code = cells[0].get_text(strip=True)
 
-                        "code": cells[0].text.strip(),
-                        "name": cells[1].text.strip(),
-                        "internal": cells[2].text.strip(),
-                        "external": cells[3].text.strip(),
-                        "total": cells[4].text.strip(),
-                        "result": cells[5].text.strip(),
-                        "date": cells[6].text.strip()
+                # Skip Header
+                if code == "Subject Code":
+                    continue
 
-                })
+                # Skip Footer
+                if code.startswith("P ->"):
+                    continue
+
+                subject = {
+
+                    "code": code,
+
+                    "name": cells[1].get_text(strip=True),
+
+                    "internal": cells[2].get_text(strip=True),
+
+                    "external": cells[3].get_text(strip=True),
+
+                    "total": cells[4].get_text(strip=True),
+
+                    "result": cells[5].get_text(strip=True),
+
+                    "date": cells[6].get_text(strip=True)
+
+                }
+
+                subjects.append(subject)
 
             student["subjects"] = subjects
+            if len(subjects) == 0:
+
+                print(f"⚠️ No subjects found for {usn}. Retrying...")
+
+                time.sleep(2)
+
+                continue
+
+            print("Subjects Found :", len(subjects))
 
             print(f"✅ Result fetched successfully for {usn}")
 
             return student
-        except Exception as e:
-            print(f"⚠️ Error fetching {usn}: {e}")
-            time.sleep(2)
-            continue
 
-# --- Main scraping loop ---
+        except Exception as e:
+
+            print(f"⚠️ Error fetching {usn}: {e}")
+            print(f"🔄 Retrying {usn}...")
+
+            time.sleep(2)
+
+            return None
+        # -----------------------
+# Main Scraping Loop
+# -----------------------
+
 results = []
+
 for u in range(low, high):
+
     usn = f"{college}{year}{branch}{str(u).zfill(3)}"
+
     print(f"\nFetching result for {usn}")
+
     res = fetch_result(usn)
+
     if res:
         results.append(res)
+
+print("Total Results:", len(results))
 
 if results:
 
@@ -227,11 +335,11 @@ if results:
     header.append("Result")
 
     ws.append(header)
-    
+
     red_fill = PatternFill(
-    start_color="FF4D4D",
-    end_color="FF4D4D",
-    fill_type="solid"
+        start_color="FF4D4D",
+        end_color="FF4D4D",
+        fill_type="solid"
     )
 
     for student in results:
@@ -257,7 +365,6 @@ if results:
         current_row = ws.max_row
 
         if final_result == "F":
-
             for cell in ws[current_row]:
                 cell.fill = red_fill
 
@@ -266,3 +373,11 @@ if results:
     wb.save("ExcelFiles/results.xlsx")
 
     print("✅ Excel Saved")
+
+else:
+
+    print("❌ No Results Found")
+
+driver.quit()
+
+print("🎉 SCRAPING COMPLETED")
