@@ -1,24 +1,201 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
-    <title>Toppers Dashboard</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scorelytix - Toppers Dashboard</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
+
+        * {
+            font-family: 'Poppins', sans-serif;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-1: #07111f;
+            --bg-2: #0b1730;
+            --bg-3: #111c3d;
+            --card: rgba(18, 25, 44, 0.82);
+            --border: rgba(255, 255, 255, 0.10);
+            --text: #f8fafc;
+            --muted: #b8c2d9;
+            --blue: #3b82f6;
+            --cyan: #22d3ee;
+            --violet: #8b5cf6;
+            --pink: #d946ef;
+            --green: #22c55e;
+            --shadow: 0 20px 45px rgba(0, 0, 0, 0.35);
+        }
+
         body {
-            background: #0f172a;
+            min-height: 100vh;
+            color: var(--text);
+            background:
+                radial-gradient(circle at 10% 10%, rgba(34, 211, 238, 0.18), transparent 25%),
+                radial-gradient(circle at 90% 20%, rgba(217, 70, 239, 0.16), transparent 25%),
+                radial-gradient(circle at 85% 85%, rgba(59, 130, 246, 0.14), transparent 25%),
+                linear-gradient(135deg, var(--bg-1) 0%, var(--bg-2) 48%, var(--bg-3) 100%);
+        }
+
+        .page-title {
+            text-align: center;
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 8px;
+            background: linear-gradient(90deg, #ffffff, #c4b5fd, #8b5cf6, #22d3ee);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .page-subtitle {
+            text-align: center;
+            color: var(--muted);
+            margin-bottom: 30px;
+        }
+
+        .glass-card {
+            background: linear-gradient(180deg,
+                    rgba(22, 30, 52, 0.88),
+                    rgba(16, 23, 40, 0.82));
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 24px;
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(18px);
+            margin-top: 24px;
+        }
+
+        .topper-banner {
+            background: linear-gradient(135deg, #2563eb, #8b5cf6, #d946ef);
+            border-radius: 24px;
+            padding: 26px;
+            box-shadow: 0 18px 40px rgba(99, 102, 241, 0.28);
+            border: 1px solid rgba(255, 255, 255, 0.14);
+        }
+
+        .topper-banner h2 {
+            font-size: 1rem;
+            color: rgba(255, 255, 255, .85);
+            margin-bottom: 8px;
+        }
+
+        .topper-banner h1 {
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 6px;
+        }
+
+        .topper-banner h4 {
+            margin: 0;
+            font-weight: 600;
+        }
+
+        .btn-premium {
+            border: none;
+            border-radius: 999px;
+            padding: 12px 22px;
+            font-weight: 600;
+            color: white;
+            text-decoration: none;
+            display: inline-block;
+            transition: .3s ease;
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.22);
+        }
+
+        .btn-premium:hover {
+            transform: translateY(-3px);
             color: white;
         }
 
-        .card-box {
-            background: #1e293b;
-            border-radius: 20px;
-            padding: 20px;
-            margin-top: 20px;
+        .btn-back {
+            background: linear-gradient(90deg, #2563eb, #22d3ee);
+        }
+
+        .btn-download {
+            background: linear-gradient(90deg, #10b981, #22c55e);
+        }
+
+        .table-wrap {
+            overflow-x: auto;
+        }
+
+        .table {
+            color: white;
+            margin: 0;
+            border-collapse: separate;
+            border-spacing: 0 10px;
+        }
+
+        .table thead th {
+            border: none !important;
+            color: #cbd5e1;
+            font-weight: 600;
+            padding-bottom: 14px;
+            background: transparent !important;
+        }
+
+        .table tbody tr {
+            background: rgba(255, 255, 255, 0.04);
+            transition: .25s ease;
+        }
+
+        .table tbody tr:hover {
+            transform: scale(1.01);
+            background: rgba(139, 92, 246, 0.12);
+        }
+
+        .table tbody td {
+            border: none !important;
+            padding: 16px;
+            vertical-align: middle;
+        }
+
+        .table tbody tr td:first-child {
+            border-radius: 14px 0 0 14px;
+        }
+
+        .table tbody tr td:last-child {
+            border-radius: 0 14px 14px 0;
+        }
+
+        .rank-badge {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            background: linear-gradient(135deg, #f59e0b, #f97316);
+            color: white;
+        }
+
+        canvas {
+            background: linear-gradient(180deg, #f8fafc, #eef2ff);
+            border-radius: 18px;
+            padding: 12px;
+        }
+
+        @media(max-width:768px) {
+            .page-title {
+                font-size: 2rem;
+            }
+
+            .topper-banner h1 {
+                font-size: 1.45rem;
+            }
+
+            .btn-premium {
+                width: 100%;
+                text-align: center;
+                margin-bottom: 10px;
+            }
         }
     </style>
 </head>
@@ -27,97 +204,112 @@
 
     <div class="container py-5">
 
-        <h1 class="text-center mb-4">
-            🏆 Topper Analytics
-        </h1>
+        <h1 class="page-title">🏆 Topper Analytics</h1>
+        <p class="page-subtitle">Scorelytix premium topper insights and rank overview</p>
 
-        <a href="/dashboard" class="btn btn-primary mb-4">
-            Back
-        </a>
-
-        <a href="/download-toppers" class="btn btn-success mb-4">
-            Download Toppers Excel
-        </a>
-
-        <div class="card-box">
-
-            <table class="table table-dark table-striped">
-
-                <thead>
-                    <tr>
-                        <th>Rank</th>
-                        <th>Name</th>
-                        <th>Total Marks</th>
-                    </tr>
-                </thead>
-
-                <tbody id="topperTable"></tbody>
-
-            </table>
-
+        <div class="d-flex flex-wrap gap-3 justify-content-center mb-4">
+            <a href="/dashboard" class="btn-premium btn-back">← Back to Dashboard</a>
+            <a href="/download-toppers" class="btn-premium btn-download">⬇ Download Toppers Excel</a>
         </div>
 
-        <div class="card-box">
+        <div class="topper-banner" id="topperBanner">
+            <h2>TOP RANKER</h2>
+            <h1 id="bannerTopperName">Loading...</h1>
+            <h4 id="bannerTopperMarks">Marks : 0</h4>
+        </div>
 
+        <div class="glass-card">
+            <h4 class="mb-4">📋 Toppers Ranking Table</h4>
+
+            <div class="table-wrap">
+                <table class="table align-middle">
+                    <thead>
+                        <tr>
+                            <th>Rank</th>
+                            <th>Name</th>
+                            <th>Total Marks</th>
+                        </tr>
+                    </thead>
+                    <tbody id="topperTable"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="glass-card">
+            <h4 class="mb-4">📊 Toppers Performance Chart</h4>
             <canvas id="topperChart"></canvas>
-
         </div>
 
     </div>
 
     <script>
-
         fetch('/analytics')
             .then(res => res.json())
             .then(data => {
-
-                const table =
-                    document.getElementById("topperTable");
-
+                const table = document.getElementById("topperTable");
                 let rows = "";
 
-                data.toppers_data.forEach(
-                    (student, index) => {
+                if (data.toppers_data && data.toppers_data.length > 0) {
+                    document.getElementById("bannerTopperName").innerText = data.toppers_data[0].name;
+                    document.getElementById("bannerTopperMarks").innerText = "Marks : " + data.toppers_data[0].marks;
+                }
 
-                        rows += `
-            <tr>
-                <td>${index + 1}</td>
-                <td>${student.name}</td>
-                <td>${student.marks}</td>
-            </tr>
-            `;
-                    }
-                );
+                data.toppers_data.forEach((student, index) => {
+                    rows += `
+                        <tr>
+                            <td><span class="rank-badge">${index + 1}</span></td>
+                            <td>${student.name}</td>
+                            <td>${student.marks}</td>
+                        </tr>
+                    `;
+                });
 
                 table.innerHTML = rows;
 
-                new Chart(
-                    document.getElementById("topperChart"),
-                    {
-                        type: 'bar',
-
-                        data: {
-
-                            labels:
-                                data.toppers_data.map(
-                                    x => x.name
-                                ),
-
-                            datasets: [{
-                                label: 'Total Marks',
-
-                                data:
-                                    data.toppers_data.map(
-                                        x => x.marks
-                                    )
-                            }]
+                new Chart(document.getElementById("topperChart"), {
+                    type: 'bar',
+                    data: {
+                        labels: data.toppers_data.map(x => x.name),
+                        datasets: [{
+                            label: 'Total Marks',
+                            data: data.toppers_data.map(x => x.marks),
+                            backgroundColor: [
+                                '#3b82f6',
+                                '#8b5cf6',
+                                '#22d3ee',
+                                '#d946ef',
+                                '#10b981',
+                                '#f59e0b'
+                            ],
+                            borderRadius: 10
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: {
+                                labels: {
+                                    color: '#111827'
+                                }
+                            }
+                        },
+                        scales: {
+                            x: {
+                                ticks: {
+                                    color: '#111827'
+                                }
+                            },
+                            y: {
+                                ticks: {
+                                    color: '#111827'
+                                }
+                            }
                         }
                     }
-                );
-
+                });
             });
-
     </script>
+
 </body>
 
 </html>

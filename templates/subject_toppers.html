@@ -2,173 +2,209 @@
 <html lang="en">
 
 <head>
-
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scorelytix - Subject Wise Toppers</title>
 
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
-
-    <title>
-        Subject Wise Toppers
-    </title>
-
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-          rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
 
-        body{
-            background:#0f172a;
-            color:white;
-            min-height:100vh;
+        * {
+            font-family: 'Poppins', sans-serif;
+            box-sizing: border-box;
         }
 
-        .title{
-            text-align:center;
-            margin-top:30px;
-            margin-bottom:30px;
-            font-size:3rem;
-            font-weight:bold;
+        :root {
+            --bg-1: #07111f;
+            --bg-2: #0b1730;
+            --bg-3: #111c3d;
+            --border: rgba(255, 255, 255, 0.10);
+            --text: #f8fafc;
+            --muted: #b8c2d9;
+            --shadow: 0 20px 45px rgba(0, 0, 0, 0.35);
         }
 
-        .card-box{
-
-            background:rgba(255,255,255,.08);
-
-            backdrop-filter:blur(15px);
-
-            border-radius:20px;
-
-            padding:25px;
-
-            margin-top:20px;
+        body {
+            min-height: 100vh;
+            color: var(--text);
+            background:
+                radial-gradient(circle at 10% 10%, rgba(34, 211, 238, 0.18), transparent 25%),
+                radial-gradient(circle at 90% 20%, rgba(139, 92, 246, 0.18), transparent 25%),
+                linear-gradient(135deg, var(--bg-1) 0%, var(--bg-2) 48%, var(--bg-3) 100%);
         }
 
-        table{
-            color:white !important;
+        .page-title {
+            text-align: center;
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 8px;
+            background: linear-gradient(90deg, #ffffff, #c4b5fd, #8b5cf6, #22d3ee);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
-        .btn-download{
-            border-radius:10px;
+        .page-subtitle {
+            text-align: center;
+            color: #b8c2d9;
+            margin-bottom: 30px;
         }
 
+        .glass-card {
+            background: linear-gradient(180deg,
+                    rgba(22, 30, 52, 0.88),
+                    rgba(16, 23, 40, 0.82));
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 24px;
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(18px);
+            margin-top: 24px;
+        }
+
+        .btn-premium {
+            border: none;
+            border-radius: 999px;
+            padding: 12px 22px;
+            font-weight: 600;
+            color: white;
+            text-decoration: none;
+            display: inline-block;
+            transition: .3s ease;
+            background: linear-gradient(90deg, #2563eb, #22d3ee);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.22);
+        }
+
+        .btn-premium:hover {
+            transform: translateY(-3px);
+            color: white;
+        }
+
+        .btn-download {
+            border: none;
+            border-radius: 999px;
+            padding: 8px 16px;
+            font-weight: 600;
+            color: white;
+            background: linear-gradient(90deg, #10b981, #22c55e);
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .table-wrap {
+            overflow-x: auto;
+        }
+
+        .table {
+            color: white;
+            margin: 0;
+            border-collapse: separate;
+            border-spacing: 0 10px;
+        }
+
+        .table thead th {
+            border: none !important;
+            color: #cbd5e1;
+            font-weight: 600;
+            padding-bottom: 14px;
+            background: transparent !important;
+        }
+
+        .table tbody tr {
+            background: rgba(255, 255, 255, 0.04);
+            transition: .25s ease;
+        }
+
+        .table tbody tr:hover {
+            transform: scale(1.01);
+            background: rgba(139, 92, 246, 0.12);
+        }
+
+        .table tbody td {
+            border: none !important;
+            padding: 16px;
+            vertical-align: middle;
+        }
+
+        .table tbody tr td:first-child {
+            border-radius: 14px 0 0 14px;
+        }
+
+        .table tbody tr td:last-child {
+            border-radius: 0 14px 14px 0;
+        }
+
+        @media(max-width:768px) {
+            .page-title {
+                font-size: 2rem;
+            }
+
+            .btn-premium {
+                width: 100%;
+                text-align: center;
+            }
+        }
     </style>
-
 </head>
 
 <body>
 
-<div class="container py-4">
+    <div class="container py-5">
 
-    <h1 class="title">
-        📚 Subject Wise Toppers
-    </h1>
+        <h1 class="page-title">📚 Subject Wise Toppers</h1>
+        <p class="page-subtitle">Top performers in each subject with downloadable subject-wise Excel sheets</p>
 
-    <div class="text-center mb-4">
+        <div class="text-center mb-4">
+            <a href="/dashboard" class="btn-premium">← Back to Dashboard</a>
+        </div>
 
-        <a href="/dashboard"
-           class="btn btn-primary">
+        <div class="glass-card">
+            <h4 class="mb-4">🎖 Subject Topper List</h4>
 
-            Back To Dashboard
-
-        </a>
-
-    </div>
-
-    <div class="card-box">
-
-        <table
-            class="table table-dark table-striped table-hover">
-
-            <thead>
-
-            <tr>
-
-                <th>Subject</th>
-
-                <th>Topper Name</th>
-
-                <th>Marks</th>
-
-                <th>Download</th>
-
-            </tr>
-
-            </thead>
-
-            <tbody id="subjectTopperTable">
-
-            </tbody>
-
-        </table>
+            <div class="table-wrap">
+                <table class="table align-middle">
+                    <thead>
+                        <tr>
+                            <th>Subject</th>
+                            <th>Topper Name</th>
+                            <th>Marks</th>
+                            <th>Download</th>
+                        </tr>
+                    </thead>
+                    <tbody id="subjectTopperTable"></tbody>
+                </table>
+            </div>
+        </div>
 
     </div>
 
-</div>
+    <script>
+        fetch('/analytics')
+            .then(response => response.json())
+            .then(data => {
+                const table = document.getElementById("subjectTopperTable");
 
-<script>
-
-fetch('/analytics')
-
-.then(response => response.json())
-
-.then(data => {
-
-    const table =
-        document.getElementById(
-            "subjectTopperTable"
-        );
-
-    data.subject_toppers.forEach(item => {
-
-        table.innerHTML += `
-
-        <tr>
-
-            <td>
-                ${item.subject}
-            </td>
-
-            <td>
-                ${item.name}
-            </td>
-
-            <td>
-                ${item.marks}
-            </td>
-
-            <td>
-
-                <a
-                href="/download-subject/${item.subject}"
-
-                class="btn btn-success btn-sm btn-download">
-
-                Download Excel
-
-                </a>
-
-            </td>
-
-        </tr>
-
-        `;
-
-    });
-
-})
-
-.catch(error => {
-
-    console.log(error);
-
-    alert(
-        "Unable to load subject toppers."
-    );
-
-});
-
-</script>
+                data.subject_toppers.forEach(item => {
+                    table.innerHTML += `
+                        <tr>
+                            <td>${item.subject}</td>
+                            <td>${item.name}</td>
+                            <td>${item.marks}</td>
+                            <td>
+                                <a href="/download-subject/${item.subject}" class="btn-download">
+                                    Download Excel
+                                </a>
+                            </td>
+                        </tr>
+                    `;
+                });
+            })
+            .catch(error => {
+                console.log(error);
+                alert("Unable to load subject toppers.");
+            });
+    </script>
 
 </body>
 

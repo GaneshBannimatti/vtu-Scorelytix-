@@ -2,209 +2,846 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>VTU Result Xalytor</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- Bootstrap 5 CDN -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+
     <style>
+        :root {
+            --bg-1: #eef4ff;
+            --bg-2: #dbeafe;
+            --bg-3: #ede9fe;
+
+            --shell-bg: rgba(255, 255, 255, 0.72);
+            --shell-border: rgba(99, 102, 241, 0.20);
+
+            --card-bg: rgba(255, 255, 255, 0.68);
+            --card-border: rgba(99, 102, 241, 0.16);
+
+            --input-bg: rgba(255, 255, 255, 0.78);
+            --input-border: rgba(148, 163, 184, 0.28);
+            --input-focus: rgba(59, 130, 246, 0.35);
+
+            --text-main: #0f172a;
+            --text-dark: #1e293b;
+            --text-soft: #475569;
+            --text-muted: #64748b;
+
+            --blue: #2563eb;
+            --blue-2: #38bdf8;
+            --purple: #7c3aed;
+            --purple-2: #a855f7;
+            --green: #16a34a;
+            --green-2: #22c55e;
+
+            --shadow-main: 0 20px 60px rgba(59, 130, 246, 0.12);
+            --shadow-soft: 0 10px 30px rgba(99, 102, 241, 0.08);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
         body {
+            margin: 0;
             min-height: 100vh;
-            background: linear-gradient(135deg,
-                    #0f172a,
-                    #1e293b,
-                    #2563eb);
+            font-family: "Inter", "Segoe UI", sans-serif;
+            color: var(--text-main);
+            background:
+                radial-gradient(circle at 10% 15%, rgba(56, 189, 248, 0.22), transparent 20%),
+                radial-gradient(circle at 90% 18%, rgba(168, 85, 247, 0.18), transparent 24%),
+                radial-gradient(circle at 85% 85%, rgba(59, 130, 246, 0.14), transparent 18%),
+                linear-gradient(135deg, var(--bg-1), var(--bg-2), var(--bg-3));
             overflow-x: hidden;
+            position: relative;
+        }
+
+        body::before,
+        body::after {
+            content: "";
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
         }
 
         body::before {
+            background:
+                radial-gradient(circle at left center, rgba(59, 130, 246, 0.10), transparent 25%),
+                radial-gradient(circle at right center, rgba(168, 85, 247, 0.10), transparent 25%);
+        }
+
+        .page-wrap {
+            position: relative;
+            z-index: 2;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 24px;
+        }
+
+        .main-shell {
+            width: 100%;
+            max-width: 1180px;
+            background: var(--shell-bg);
+            backdrop-filter: blur(22px);
+            -webkit-backdrop-filter: blur(22px);
+            border: 1px solid var(--shell-border);
+            border-radius: 28px;
+            padding: 28px;
+            box-shadow: var(--shadow-main);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .main-shell::before {
             content: "";
             position: absolute;
-            width: 400px;
-            height: 400px;
-            background: #60a5fa;
+            inset: 0;
+            background:
+                radial-gradient(circle at top center, rgba(168, 85, 247, 0.08), transparent 30%),
+                radial-gradient(circle at left center, rgba(56, 189, 248, 0.08), transparent 25%);
+            pointer-events: none;
+        }
+
+        .top-logo {
+            width: 84px;
+            height: 84px;
+            margin: 0 auto 14px;
             border-radius: 50%;
-            top: -150px;
-            left: -100px;
-            filter: blur(150px);
-            opacity: .35;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            color: white;
+            background: linear-gradient(135deg, var(--blue), var(--purple));
+            box-shadow: 0 12px 30px rgba(99, 102, 241, 0.25);
         }
 
-        body::after {
-            content: "";
-            position: absolute;
-            width: 350px;
-            height: 350px;
-            background: #8b5cf6;
+        .hero {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .hero h1 {
+            margin: 0;
+            font-size: 3rem;
+            font-weight: 900;
+            line-height: 1.08;
+            color: var(--text-main);
+            letter-spacing: -.8px;
+        }
+
+        .hero h1 .accent {
+            background: linear-gradient(90deg, var(--purple), var(--blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero p {
+            margin: 10px 0 14px;
+            font-size: 1.08rem;
+            font-weight: 500;
+            color: var(--text-soft);
+        }
+
+        .hero-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 11px 18px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.72);
+            border: 1px solid rgba(99, 102, 241, 0.15);
+            color: var(--text-dark);
+            font-size: 1rem;
+            box-shadow: var(--shadow-soft);
+        }
+
+        .step-title {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin: 26px 0 14px;
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: var(--text-main);
+        }
+
+        .step-badge {
+            width: 38px;
+            height: 38px;
             border-radius: 50%;
-            bottom: -120px;
-            right: -100px;
-            filter: blur(150px);
-            opacity: .35;
-        }
-
-        .card {
-            background: rgba(255, 255, 255, .08);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, .15);
-            border-radius: 30px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 1rem;
             color: white;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, .35);
+            background: linear-gradient(135deg, var(--purple), var(--blue));
+            box-shadow: 0 8px 22px rgba(99, 102, 241, 0.22);
         }
 
-        .form-control {
-            background: rgba(255, 255, 255, .1);
-            border: none;
-            color: white;
-            border-radius: 12px;
+        .method-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
         }
 
-        .form-control:focus {
-            background: rgba(255, 255, 255, .15);
-            color: white;
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, .4);
+        .method-card {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            min-height: 92px;
+            padding: 16px 18px;
+            border-radius: 18px;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            box-shadow: var(--shadow-soft);
+            transition: .25s ease;
+            cursor: pointer;
         }
 
-        .form-control::placeholder {
-            color: #cbd5e1;
-        }
-
-        .form-label {
-            color: white;
-            font-weight: 600;
-        }
-
-        .btn-primary {
-            border: none;
-            border-radius: 12px;
-            background: linear-gradient(135deg,
-                    #2563eb,
-                    #7c3aed);
-            font-weight: 600;
-        }
-
-        .btn-primary:hover {
+        .method-card:hover {
             transform: translateY(-2px);
         }
 
-        .btn-success {
-            border-radius: 12px;
+        .method-card.active.range {
+            border: 2px solid rgba(37, 99, 235, 0.55);
+            box-shadow: 0 14px 30px rgba(37, 99, 235, 0.14);
+            background: linear-gradient(135deg, rgba(239, 246, 255, 0.92), rgba(243, 232, 255, 0.85));
         }
 
-        .btn-warning {
-            border-radius: 12px;
+        .method-card.active.excel {
+            border: 2px solid rgba(34, 197, 94, 0.45);
+            box-shadow: 0 14px 30px rgba(34, 197, 94, 0.12);
+            background: linear-gradient(135deg, rgba(240, 253, 244, 0.92), rgba(236, 253, 245, 0.85));
         }
 
-        .footer {
+        .method-radio-dot {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            border: 2px solid rgba(148, 163, 184, 0.45);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .method-card.active .method-radio-dot::after {
+            content: "";
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--blue), var(--purple));
+        }
+
+        .method-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
             color: white;
+            flex-shrink: 0;
+        }
+
+        .method-card.range .method-icon {
+            background: linear-gradient(135deg, var(--blue), var(--blue-2));
+        }
+
+        .method-card.excel .method-icon {
+            background: linear-gradient(135deg, var(--green), var(--green-2));
+        }
+
+        .method-text h5 {
+            margin: 0 0 4px;
+            font-size: 1.08rem;
+            font-weight: 800;
+            color: var(--text-main);
+        }
+
+        .method-text p {
+            margin: 0;
+            color: var(--text-soft);
+            font-size: .97rem;
+            font-weight: 500;
+        }
+
+        .url-wrap {
+            margin-top: 8px;
+        }
+
+        .url-input-wrap {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            height: 62px;
+            border-radius: 16px;
+            padding: 0 18px;
+            background: rgba(255, 255, 255, 0.82);
+            border: 2px solid rgba(168, 85, 247, 0.35);
+            box-shadow: var(--shadow-soft);
+        }
+
+        .url-input-wrap i {
+            font-size: 1.25rem;
+            color: var(--purple);
+        }
+
+        .url-input-wrap input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            outline: none;
+            color: var(--text-main);
+            font-size: 1.02rem;
+            font-weight: 600;
+        }
+
+        .url-input-wrap input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .helper-text {
+            margin-top: 8px;
+            color: var(--text-soft);
+            font-size: .95rem;
+        }
+
+        .panels-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+            margin-top: 18px;
+        }
+
+        .panel-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            padding: 16px;
+            box-shadow: var(--shadow-soft);
+            transition: .25s ease;
+        }
+
+        .panel-card.range-panel.active {
+            border: 1px solid rgba(37, 99, 235, 0.28);
+        }
+
+        .panel-card.excel-panel.active {
+            border: 1px solid rgba(34, 197, 94, 0.28);
+        }
+
+        .panel-card.inactive {
+            opacity: .62;
+        }
+
+        .panel-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            margin-bottom: 14px;
+        }
+
+        .panel-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.05rem;
+            font-weight: 900;
+            text-transform: uppercase;
+        }
+
+        .panel-title.range {
+            color: var(--blue);
+        }
+
+        .panel-title.excel {
+            color: var(--green);
+        }
+
+        .panel-badge {
+            padding: 7px 12px;
+            border-radius: 999px;
+            font-size: .84rem;
+            font-weight: 700;
+            color: white;
+            background: linear-gradient(135deg, var(--blue), var(--purple));
+        }
+
+        .panel-badge.green {
+            background: linear-gradient(135deg, var(--green), #4ade80);
+        }
+
+        .field-stack {
+            display: grid;
+            gap: 10px;
+        }
+
+        .field-with-icon {
+            display: grid;
+            grid-template-columns: 58px 1fr;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--input-border);
+            background: var(--input-bg);
+        }
+
+        .field-icon-box {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            color: var(--blue);
+            background: rgba(59, 130, 246, 0.08);
+            border-right: 1px solid rgba(148, 163, 184, 0.18);
+        }
+
+        .field-with-icon input,
+        .field-with-icon select {
+            width: 100%;
+            border: none;
+            outline: none;
+            background: transparent;
+            color: var(--text-main);
+            padding: 0 14px;
+            font-size: .98rem;
+            height: 48px;
+        }
+
+        .field-with-icon input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .two-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .excel-drop {
+            border: 1px dashed rgba(34, 197, 94, 0.35);
+            background: rgba(255, 255, 255, 0.55);
+            border-radius: 16px;
+            padding: 22px 16px;
+            text-align: center;
+            min-height: 132px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .excel-upload-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            margin: 0 auto 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(34, 197, 94, 0.12);
+            color: var(--green);
+            font-size: 1.6rem;
+        }
+
+        .excel-drop h5 {
+            margin: 0;
+            font-size: 1.08rem;
+            font-weight: 800;
+            color: var(--text-main);
+        }
+
+        .excel-drop p {
+            margin: 4px 0 10px;
+            color: var(--text-soft);
+        }
+
+        .file-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            height: 42px;
+            min-width: 140px;
+            padding: 0 16px;
+            border-radius: 12px;
+            border: none;
+            background: linear-gradient(135deg, var(--green), #4ade80);
+            color: white;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 10px 24px rgba(34, 197, 94, 0.18);
+        }
+
+        .file-name {
+            margin-top: 10px;
+            color: var(--text-soft);
+            font-size: .92rem;
+            word-break: break-word;
+        }
+
+        .hidden-file {
+            display: none;
+        }
+
+        .submit-wrap {
+            margin-top: 22px;
+        }
+
+        .start-btn {
+            width: 100%;
+            height: 72px;
+            border: none;
+            border-radius: 18px;
+            color: white;
+            font-size: 1.15rem;
+            font-weight: 900;
+            letter-spacing: .2px;
+            background: linear-gradient(90deg, var(--blue), var(--purple-2));
+            box-shadow: 0 18px 35px rgba(99, 102, 241, 0.18);
+            transition: .25s ease;
+        }
+
+        .start-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .privacy-note {
+            text-align: center;
+            margin-top: 12px;
+            color: var(--text-soft);
+            font-size: .96rem;
+        }
+
+        .progress-box,
+        .output-box,
+        .actions-box {
+            margin-top: 18px;
+        }
+
+        .progress-box {
+            display: none;
+            background: rgba(255, 255, 255, 0.70);
+            border: 1px solid rgba(99, 102, 241, 0.14);
+            border-radius: 16px;
+            padding: 16px;
+            box-shadow: var(--shadow-soft);
+        }
+
+        .progress-box h6 {
+            margin-bottom: 10px;
+            font-weight: 800;
+            color: var(--text-main);
+        }
+
+        .neo-progress {
+            width: 100%;
+            height: 12px;
+            border-radius: 999px;
+            background: rgba(148, 163, 184, 0.18);
+            overflow: hidden;
+        }
+
+        .neo-progress-bar {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, var(--blue), var(--purple));
+            animation: slideBar 1.25s linear infinite;
+        }
+
+        @keyframes slideBar {
+            0% {
+                transform: translateX(-35%);
+            }
+
+            100% {
+                transform: translateX(35%);
+            }
+        }
+
+        .actions-box {
+            display: grid;
+            gap: 12px;
+        }
+
+        .action-btn {
+            min-height: 52px;
+            border-radius: 14px;
+            font-weight: 800;
+            display: none;
+        }
+
+        .download-btn {
+            background: linear-gradient(135deg, var(--green), #4ade80);
+            border: none;
+            color: white;
+        }
+
+        .dashboard-btn {
+            border: none;
+            background: linear-gradient(135deg, var(--blue), var(--purple));
+            color: white;
+        }
+
+        @media (max-width: 991px) {
+            .hero h1 {
+                font-size: 2.4rem;
+            }
+
+            .method-grid,
+            .panels-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .page-wrap {
+                padding: 12px;
+            }
+
+            .main-shell {
+                padding: 16px;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .two-col {
+                grid-template-columns: 1fr;
+            }
+
+            .start-btn {
+                height: 64px;
+                font-size: 1rem;
+            }
         }
     </style>
 </head>
 
 <body>
-    <div class="container d-flex align-items-center justify-content-center" style="min-height: 100vh;">
-        <div class="card p-4" style="width: 100%; max-width: 650px;">
-            <div class="text-center">
-                <div class="text-center mb-4">
+    <div class="page-wrap">
+        <div class="main-shell">
+            <!-- top logo -->
+            <div class="top-logo">🚀</div>
 
-                    <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" style="
-         width:90px;
-         height:90px;
-         border-radius:50%;
-         border:4px solid rgba(255,255,255,.2);
-         ">
-
-                    <h1 style="
-    font-weight:700;
-    margin-top:15px;
-    color:white;
-    ">
-                        🚀 VTU Result Xalytor
-                    </h1>
-
-                    <p style="color:#cbd5e1;">
-                        Smart VTU Result Analytics Platform
-                    </p>
-
+            <!-- hero -->
+            <div class="hero">
+                <h1>VTU Result <span class="accent">Xalytor</span></h1>
+                <p>Smart VTU Result Analytics Platform</p>
+                <div class="hero-pill">
+                    <i class="bi bi-stars"></i>
+                    Automate your VTU result downloads
                 </div>
-                <div class="mb-3 text-muted" style="font-size:1.1em;">Automate your VTU result downloads</div>
             </div>
-            <form id="scraperForm" autocomplete="off">
-                <div class="mb-3">
-                    <label for="college" class="form-label"><i class="bi bi-building"></i> College Code</label>
-                    <input type="text" class="form-control" id="college" name="college" required>
+
+            <form id="scraperForm" enctype="multipart/form-data">
+                <!-- Step 1 -->
+                <div class="step-title">
+                    <span class="step-badge">1</span>
+                    <span>Scraping Method</span>
                 </div>
-                <div class="mb-3">
-                    <label for="year" class="form-label"><i class="bi bi-calendar"></i> Year</label>
-                    <input type="text" class="form-control" id="year" name="year" required>
-                </div>
-                <div class="mb-3">
-                    <label for="branch" class="form-label"><i class="bi bi-diagram-3"></i> Branch</label>
-                    <input type="text" class="form-control" id="branch" name="branch" required>
-                </div>
-                <div class="mb-3">
-                    <label for="low" class="form-label"><i class="bi bi-arrow-down"></i> Starting USN (number)</label>
-                    <input type="number" class="form-control" id="low" name="low" required>
-                </div>
-                <div class="mb-3">
-                    <label for="high" class="form-label"><i class="bi bi-arrow-up"></i> Last USN (number)</label>
-                    <input type="number" class="form-control" id="high" name="high" required>
-                </div>
-                <!-- ✅ Semester field restricted to 1–8 -->
-                <!-- Semester -->
-                <div class="mb-3">
-                    <label for="semc" class="form-label">
-                        <i class="bi bi-123"></i> Semester
+
+                <div class="method-grid">
+                    <label class="method-card range active" id="rangeCard" for="rangeMode">
+                        <span class="method-radio-dot"></span>
+                        <div class="method-icon">
+                            <i class="bi bi-ui-checks-grid"></i>
+                        </div>
+                        <div class="method-text">
+                            <h5>Scrape Using USN Range</h5>
+                            <p>Enter range and get results</p>
+                        </div>
+                        <input class="hidden-file" type="radio" name="scrape_mode" id="rangeMode" value="range" checked>
                     </label>
 
-                    <input type="number" class="form-control" id="semc" name="semc" required min="1" max="8"
-                        oninput="if(this.value.length > 1) this.value = this.value.slice(0, 1);"
-                        placeholder="Enter semester (1-8)">
-                </div>
-
-                <!-- VTU Result URL -->
-                <div class="mb-3">
-                    <label for="result_url" class="form-label">
-                        <i class="bi bi-link-45deg"></i> VTU Result URL
+                    <label class="method-card excel" id="excelCard" for="excelMode">
+                        <span class="method-radio-dot"></span>
+                        <div class="method-icon">
+                            <i class="bi bi-file-earmark-excel-fill"></i>
+                        </div>
+                        <div class="method-text">
+                            <h5>Scrape Using Excel File</h5>
+                            <p>Upload Excel file with USNs</p>
+                        </div>
+                        <input class="hidden-file" type="radio" name="scrape_mode" id="excelMode" value="excel">
                     </label>
-
-                    <input type="url" class="form-control" id="result_url" name="result_url" required
-                        placeholder="https://results.vtu.ac.in/xxxx/index.php">
                 </div>
-                <button type="submit" class="btn btn-primary w-100 py-3">
-                    🚀 Start Scraping
-                </button>
+
+                <!-- Step 2 -->
+                <div class="step-title">
+                    <span class="step-badge">2</span>
+                    <span>VTU Result URL</span>
+                </div>
+
+                <div class="url-wrap">
+                    <div class="url-input-wrap">
+                        <i class="bi bi-link-45deg"></i>
+                        <input type="url" id="result_url" name="result_url"
+                            placeholder="https://results.vtu.ac.in/xxxx/index.php" required>
+                    </div>
+                    <div class="helper-text">
+                        <i class="bi bi-info-circle"></i> Paste the VTU result URL from your browser
+                    </div>
+                </div>
+
+                <!-- panels -->
+                <div class="panels-grid">
+                    <!-- RANGE PANEL -->
+                    <div class="panel-card range-panel active" id="rangePanel">
+                        <div class="panel-head">
+                            <div class="panel-title range">
+                                <i class="bi bi-postcard-heart"></i>
+                                <span>USN Range Details</span>
+                            </div>
+                            <div class="panel-badge">For Range Method</div>
+                        </div>
+
+                        <div class="field-stack">
+                            <div class="field-with-icon">
+                                <div class="field-icon-box"><i class="bi bi-bank"></i></div>
+                                <input type="text" id="college" name="college" placeholder="Enter college code"
+                                    required>
+                            </div>
+
+                            <div class="field-with-icon">
+                                <div class="field-icon-box"><i class="bi bi-calendar-event"></i></div>
+                                <input type="text" id="year" name="year" placeholder="e.g., 23" required>
+                            </div>
+
+                            <div class="field-with-icon">
+                                <div class="field-icon-box"><i class="bi bi-diagram-3"></i></div>
+                                <input type="text" id="branch" name="branch" placeholder="e.g., CS" required>
+                            </div>
+
+                            <div class="two-col">
+                                <div class="field-with-icon">
+                                    <div class="field-icon-box"><i class="bi bi-arrow-down-circle"></i></div>
+                                    <input type="number" id="low" name="low" placeholder="Starting USN" required>
+                                </div>
+
+                                <div class="field-with-icon">
+                                    <div class="field-icon-box"><i class="bi bi-arrow-up-circle"></i></div>
+                                    <input type="number" id="high" name="high" placeholder="Last USN" required>
+                                </div>
+                            </div>
+
+                            <div class="field-with-icon">
+                                <div class="field-icon-box"><i class="bi bi-123"></i></div>
+                                <select id="semc" name="semc" required>
+                                    <option value="">Select semester (1-8)</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                    <option value="6">6</option>
+                                    <option value="7">7</option>
+                                    <option value="8">8</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- EXCEL PANEL -->
+                    <div class="panel-card excel-panel inactive" id="excelPanel">
+                        <div class="panel-head">
+                            <div class="panel-title excel">
+                                <i class="bi bi-bezier2"></i>
+                                <span>Excel Upload</span>
+                            </div>
+                            <div class="panel-badge green">For Excel Method</div>
+                        </div>
+
+                        <div class="excel-drop">
+                            <div class="excel-upload-icon">
+                                <i class="bi bi-cloud-arrow-up-fill"></i>
+                            </div>
+                            <h5>Choose Excel File</h5>
+                            <p>Upload .xlsx or .xls file</p>
+
+                            <label for="excel_file" class="file-btn">Choose File</label>
+                            <input type="file" id="excel_file" name="excel_file" class="hidden-file"
+                                accept=".xlsx,.xls">
+                            <div class="file-name" id="fileNameText">No file selected</div>
+                        </div>
+
+                        <div style="margin-top:12px;">
+                            <div class="field-with-icon" style="border-color: rgba(55, 216, 107, .30);">
+                                <div class="field-icon-box" style="color:#48e36a; background: rgba(20, 65, 35, .42);">
+                                    <i class="bi bi-123"></i>
+                                </div>
+                                <select id="excel_semester" name="excel_semester">
+                                    <option value="">Select semester (1-8)</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                    <option value="6">6</option>
+                                    <option value="7">7</option>
+                                    <option value="8">8</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- submit -->
+                <div class="submit-wrap">
+                    <button type="submit" class="start-btn">
+                        🚀 Start Scraping
+                    </button>
+                    <div class="privacy-note">
+                        <i class="bi bi-shield-check"></i>
+                        We respect your privacy. Your data is safe and secure.
+                    </div>
+                </div>
             </form>
-            <div id="output" class="text-center mt-3"></div>
-            <div id="progressSection" class="mt-3" style="display:none;">
-                <div class="d-flex align-items-center">
-                    <div class="spinner-border text-primary me-2" role="status" style="width: 1.5rem; height: 1.5rem;">
-                        <span class="visually-hidden">Loading...</span>
-                    </div>
-                    <span>Fetching results, please wait...</span>
+
+            <!-- progress -->
+            <div class="progress-box" id="progressSection">
+                <h6><i class="bi bi-arrow-repeat"></i> Scraping in progress...</h6>
+                <div class="neo-progress">
+                    <div class="neo-progress-bar"></div>
                 </div>
-                <div class="progress mt-2">
-                    <div class="progress-bar progress-bar-striped progress-bar-animated bg-primary" style="width: 100%">
-                    </div>
+                <div class="helper-text" style="margin-top:10px;">
+                    Please wait while VTU Result Xalytor processes your results.
                 </div>
             </div>
-            <button id="downloadBtn" class="btn btn-success w-100 mt-3" style="display:none;">
-                Download Excel File
-            </button>
 
-            <a href="/dashboard" id="dashboardBtn" class="btn btn-warning w-100 mt-2" style="display:none;">
-                View Analytics Dashboard
-            </a>
+            <!-- output -->
+            <div class="output-box" id="output"></div>
+
+            <!-- actions -->
+            <div class="actions-box">
+                <button id="downloadBtn" class="btn action-btn download-btn">
+                    <i class="bi bi-download"></i> Download Excel Results
+                </button>
+
+                <button id="dashboardBtn" class="btn action-btn dashboard-btn">
+                    <i class="bi bi-bar-chart-line"></i> Open Analytics Dashboard
+                </button>
+            </div>
         </div>
     </div>
 
-    <!-- Toast Notification -->
-    <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
-        <div id="toastDownload" class="toast align-items-center text-bg-success border-0" role="alert"
-            aria-live="assertive" aria-atomic="true">
+    <!-- Toast -->
+    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+        <div id="toastDownload" class="toast text-bg-success border-0" role="alert" aria-live="assertive"
+            aria-atomic="true">
             <div class="d-flex">
                 <div class="toast-body">
-                    ✅ Scraping complete! You can now download the results.
+                    🎉 Scraping completed successfully. Your Excel file is ready.
                 </div>
                 <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
                     aria-label="Close"></button>
@@ -212,18 +849,9 @@
         </div>
     </div>
 
-
-    <footer class="footer text-center mt-4 mb-2">
-        &copy; 2025 <b>The Scrappers</b>. All rights reserved.
-    </footer>
-
-
-    <!-- Bootstrap Icons CDN -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
-        // ✅ List of all valid VTU college codes
         const validCollegeCodes = [
             "1AP", "1AY", "1AA", "1AO", "1AH", "1AJ", "1AN", "1AK", "1AC", "1AM", "1AR", "1AT", "1BG", "1BT", "1BC", "1BI", "1BH", "1TA", "1PC", "1BM", "1BE", "1BY", "1BQ", "1BO", "1CK", "1CR", "1CD", "1CG", "1CE", "1DT", "1DS", "1DB", "1DA", "1CC", "1GV", "1EC", "1EP", "1EE", "1EW", "1GC", "1GA", "1GD", "1GO", "1SK", "1SE", "1GT", "1GG", "1HK", "1HM", "1IC", "1IS", "1II", "1JV", "1JS", "1JT", "1KF", "1KG", "1KS", "1KI", "1KN", "1ME", "1MS", "1MJ", "1NC", "1AU", "1NH", "1NT", "1OX", "1PN", "1PI", "1PE", "1RI", "1RL", "1RR", "1RV", "1RG", "1RE", "1RN", "1SJ", "1VA", "1ST", "1SZ", "1SG", "1SC", "1SP", "1HS", "1PL", "1SV", "1SI", "1MV", "1JB", "1KT", "1RC", "1SB", "1VE", "1VG", "1VB", "1TJ", "1VI", "1VJ", "1VK", "1YD",
             "2AV", "2AG", "2AB", "2BV", "2BA", "2BL", "2GP", "2GO", "2GB", "2HN", "2JI", "2JM", "2KD", "2KL", "2KE", "2GI", "2MB", "2MM", "2RH", "2BU", "2SR", "2SD", "2SA", "2HA", "2KA", "2TG", "2VS", "2VD",
@@ -232,17 +860,96 @@
         ];
 
         const form = document.getElementById('scraperForm');
-        const collegeInput = document.getElementById('college');
+        const rangeMode = document.getElementById("rangeMode");
+        const excelMode = document.getElementById("excelMode");
+        const rangeCard = document.getElementById("rangeCard");
+        const excelCard = document.getElementById("excelCard");
+        const rangePanel = document.getElementById("rangePanel");
+        const excelPanel = document.getElementById("excelPanel");
+        const collegeInput = document.getElementById("college");
         const output = document.getElementById('output');
         const downloadBtn = document.getElementById('downloadBtn');
         const dashboardBtn = document.getElementById('dashboardBtn');
         const progressSection = document.getElementById('progressSection');
+        const fileInput = document.getElementById('excel_file');
+        const fileNameText = document.getElementById('fileNameText');
         const toastDownload = new bootstrap.Toast(document.getElementById('toastDownload'));
 
-        // 🟢 Auto-uppercase college code as user types
+        function setRangeRequired(isRequired) {
+            document.getElementById("college").required = isRequired;
+            document.getElementById("year").required = isRequired;
+            document.getElementById("branch").required = isRequired;
+            document.getElementById("low").required = isRequired;
+            document.getElementById("high").required = isRequired;
+            document.getElementById("semc").required = isRequired;
+        }
+
+        function setExcelRequired(isRequired) {
+            document.getElementById("excel_file").required = isRequired;
+            document.getElementById("excel_semester").required = isRequired;
+        }
+
+        function activateRangeMode() {
+            rangeMode.checked = true;
+
+            rangeCard.classList.add("active");
+            excelCard.classList.remove("active");
+
+            rangeCard.classList.add("range");
+            excelCard.classList.add("excel");
+
+            rangePanel.classList.add("active");
+            rangePanel.classList.remove("inactive");
+
+            excelPanel.classList.remove("active");
+            excelPanel.classList.add("inactive");
+
+            setRangeRequired(true);
+            setExcelRequired(false);
+
+            collegeInput.classList.remove("is-valid", "is-invalid");
+        }
+
+        function activateExcelMode() {
+            excelMode.checked = true;
+
+            excelCard.classList.add("active");
+            rangeCard.classList.remove("active");
+
+            excelPanel.classList.add("active");
+            excelPanel.classList.remove("inactive");
+
+            rangePanel.classList.remove("active");
+            rangePanel.classList.add("inactive");
+
+            setRangeRequired(false);
+            setExcelRequired(true);
+
+            collegeInput.classList.remove("is-valid", "is-invalid");
+        }
+
+        // click mode cards
+        rangeCard.addEventListener("click", activateRangeMode);
+        excelCard.addEventListener("click", activateExcelMode);
+        rangeMode.addEventListener("change", activateRangeMode);
+        excelMode.addEventListener("change", activateExcelMode);
+
+        // file name preview
+        fileInput.addEventListener("change", () => {
+            if (fileInput.files.length > 0) {
+                fileNameText.textContent = fileInput.files[0].name;
+            } else {
+                fileNameText.textContent = "No file selected";
+            }
+        });
+
+        // college validation
         collegeInput.addEventListener('input', () => {
             collegeInput.value = collegeInput.value.toUpperCase();
             const code = collegeInput.value.trim();
+
+            if (!rangeMode.checked) return;
+
             if (code.length >= 2) {
                 if (validCollegeCodes.includes(code)) {
                     collegeInput.classList.remove('is-invalid');
@@ -257,54 +964,88 @@
         });
 
         window.onload = function () {
+            output.innerHTML = "";
+            progressSection.style.display = "none";
             downloadBtn.style.display = "none";
             dashboardBtn.style.display = "none";
-            progressSection.style.display = "none";
+            activateRangeMode();
         };
 
         form.addEventListener('submit', async function (e) {
             e.preventDefault();
-            const collegeCode = collegeInput.value.trim().toUpperCase();
 
-            // ✅ Validate college code
-            if (!validCollegeCodes.includes(collegeCode)) {
-                output.innerHTML = `
-                <div class="alert alert-danger mt-3" role="alert">
-                    ⚠️ Invalid College Code: <strong>${collegeCode}</strong><br>
-                    Please enter a valid VTU college code.
-                </div>
-            `;
-                progressSection.style.display = "none";
-                downloadBtn.style.display = "none";
-                return;
-            }
-
-            // ✅ Proceed if valid
             output.innerHTML = "";
             progressSection.style.display = "block";
             downloadBtn.style.display = "none";
+            dashboardBtn.style.display = "none";
+
+            const mode = document.querySelector('input[name="scrape_mode"]:checked').value;
+
+            // validate college only in range mode
+            if (mode === "range") {
+                const collegeCode = collegeInput.value.trim().toUpperCase();
+
+                if (!validCollegeCodes.includes(collegeCode)) {
+                    output.innerHTML = `
+                        <div class="alert alert-danger mt-3">
+                            ⚠️ Invalid College Code: <strong>${collegeCode || "EMPTY"}</strong><br>
+                            Please enter a valid VTU college code.
+                        </div>
+                    `;
+                    progressSection.style.display = "none";
+                    return;
+                }
+            }
 
             const formData = new FormData(form);
-            await fetch('/run-scraper', {
-                method: 'POST',
-                body: formData
-            });
+            const api = (mode === "range") ? "/run-scraper" : "/run-excel-scraper";
 
-            // ⏳ Poll every 5 seconds to check if the file is ready
-            const poll = setInterval(async () => {
-                const res = await fetch('/download', { method: 'HEAD' });
-                if (res.status === 200) {
-                    clearInterval(poll);
+            try {
+                const response = await fetch(api, {
+                    method: "POST",
+                    body: formData
+                });
 
+                const result = await response.json();
+
+                if (result.error) {
                     progressSection.style.display = "none";
-                    output.innerHTML = "";
-
-                    downloadBtn.style.display = "block";
-                    dashboardBtn.style.display = "block";
-
-                    toastDownload.show();
+                    output.innerHTML = `
+                        <div class="alert alert-danger mt-3">
+                            ❌ ${result.error}
+                        </div>
+                    `;
+                    return;
                 }
-            }, 5000);
+
+                // poll download file
+                const poll = setInterval(async () => {
+                    const res = await fetch('/download', { method: 'HEAD' });
+
+                    if (res.status === 200) {
+                        clearInterval(poll);
+
+                        progressSection.style.display = "none";
+                        output.innerHTML = `
+                            <div class="alert alert-success mt-3">
+                                🎉 Scraping completed successfully. Your Excel file is ready.
+                            </div>
+                        `;
+
+                        downloadBtn.style.display = "block";
+                        dashboardBtn.style.display = "block";
+                        toastDownload.show();
+                    }
+                }, 5000);
+
+            } catch (err) {
+                progressSection.style.display = "none";
+                output.innerHTML = `
+                    <div class="alert alert-danger mt-3">
+                        ❌ Something went wrong while starting the scraper.
+                    </div>
+                `;
+            }
         });
 
         downloadBtn.onclick = function () {

@@ -25,6 +25,7 @@ pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tessera
 # --- Ignore warnings ---
 if not sys.warnoptions:
     warnings.simplefilter("ignore")
+url = ""    
 
 # --- Get user input from CLI or arguments ---
 def get_inputs():
@@ -51,8 +52,6 @@ def get_inputs():
 
     return college, year, branch, low, high, semc, url
 
-college, year, branch, low, high, semc, url = get_inputs()
-
 # --- Set result URL based on semester ---
 # if semc == "1":
 #    url = "https://results.vtu.ac.in/DJcbcs24/index.php"
@@ -61,17 +60,6 @@ college, year, branch, low, high, semc, url = get_inputs()
 # else:
 #    print(f"⚠️ Semester {semc} not supported yet. Exiting...")
 #    sys.exit()
-
-# --- Set subject code and loop count based on diploma and semester ---
-dip = "Y" if low >= 400 else "N"
-subcode = 52
-iloop = 8
-if semc in ["3", "4"]:
-    iloop = 9
-    subcode = 58
-    if dip == "Y":
-        iloop = 10
-        subcode = 64
 
 # --- Setup Selenium Chrome driver ---
 service = Service(ChromeDriverManager().install())
@@ -298,31 +286,18 @@ def fetch_result(usn: str):
 
             time.sleep(2)
 
-            return None
-        # -----------------------
-# Main Scraping Loop
+            continue
 # -----------------------
+# Save Results to Excel
+# -----------------------
+def save_results_to_excel(results):
 
-results = []
-
-for u in range(low, high):
-
-    usn = f"{college}{year}{branch}{str(u).zfill(3)}"
-
-    print(f"\nFetching result for {usn}")
-
-    res = fetch_result(usn)
-
-    if res:
-        results.append(res)
-
-print("Total Results:", len(results))
-
-if results:
+    if not results:
+        print("❌ No Results Found")
+        return
 
     wb = Workbook()
     ws = wb.active
-
     ws.title = "VTU Results"
 
     header = ["USN", "Name"]
@@ -352,14 +327,12 @@ if results:
         final_result = "P"
 
         for subject in student["subjects"]:
-
             row.append(subject["total"])
 
             if subject["result"] == "F":
                 final_result = "F"
 
         row.append(final_result)
-
         ws.append(row)
 
         current_row = ws.max_row
@@ -369,15 +342,55 @@ if results:
                 cell.fill = red_fill
 
     os.makedirs("ExcelFiles", exist_ok=True)
-
     wb.save("ExcelFiles/results.xlsx")
 
     print("✅ Excel Saved")
 
-else:
 
-    print("❌ No Results Found")
+# -----------------------
+# Range Scraper Function
+# -----------------------
+def scrape_range():
 
-driver.quit()
+    results = []
 
-print("🎉 SCRAPING COMPLETED")
+    for u in range(low, high):
+
+        usn = f"{college}{year}{branch}{str(u).zfill(3)}"
+
+        print(f"\nFetching result for {usn}")
+
+        res = fetch_result(usn)
+
+        if res:
+            results.append(res)
+
+    print("Total Results:", len(results))
+
+    save_results_to_excel(results)
+
+    driver.quit()
+
+    print("🎉 SCRAPING COMPLETED")
+
+# -----------------------
+# Run Main Range Scraper
+# -----------------------
+if __name__ == "__main__":
+
+    college, year, branch, low, high, semc, url = get_inputs()
+
+    # --- Set subject code and loop count based on diploma and semester ---
+    dip = "Y" if low >= 400 else "N"
+    subcode = 52
+    iloop = 8
+
+    if semc in ["3", "4"]:
+        iloop = 9
+        subcode = 58
+
+        if dip == "Y":
+            iloop = 10
+            subcode = 64
+
+    scrape_range()

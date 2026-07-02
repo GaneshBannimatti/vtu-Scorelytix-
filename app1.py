@@ -4,6 +4,7 @@ import os
 import threading
 from numpy import rint
 import pandas as pd
+from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
 
@@ -35,8 +36,22 @@ def run_scraper_thread(college, year, branch, low, high, semc, result_url):
     ]
 
     subprocess.run(cmd)
+    
+    
+def run_excel_scraper_thread(filepath, semc, result_url):
 
+    cmd = [
 
+        "python",
+        "scraper_excel.py",
+        filepath,
+        semc,
+        result_url
+    ]
+
+    subprocess.run(cmd)
+
+    
 # =========================
 # Start Scraper
 # =========================
@@ -73,6 +88,66 @@ def run_scraper():
 
     return jsonify({
         "output": "Scraping started successfully."
+    })
+    
+# =========================
+# Start Excel Scraper
+# =========================
+@app.route('/run-excel-scraper', methods=['POST'])
+def run_excel_scraper():
+
+    excel = request.files.get("excel_file")
+
+    if excel is None:
+
+        return jsonify({
+
+            "error": "No Excel file uploaded."
+
+        })
+
+    semc = request.form.get("excel_semester")
+
+    result_url = request.form.get("result_url")
+
+    if os.path.exists(EXCEL_FILE):
+
+        os.remove(EXCEL_FILE)
+
+    os.makedirs("uploads", exist_ok=True)
+
+    filepath = os.path.join(
+
+        "uploads",
+
+        secure_filename(excel.filename)
+
+    )
+
+    excel.save(filepath)
+
+    thread = threading.Thread(
+
+        target=run_excel_scraper_thread,
+
+        args=(
+
+            filepath,
+
+            semc,
+
+            result_url
+
+        )
+
+    )
+
+    thread.start()
+
+    return jsonify({
+
+        "output": "Excel Scraping Started."
+
     })
 
 
