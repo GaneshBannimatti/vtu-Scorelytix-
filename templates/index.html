@@ -974,6 +974,25 @@
         form.addEventListener('submit', async function (e) {
             e.preventDefault();
 
+            // Check VTU result link
+            const resultUrl = document.getElementById("result_url").value.trim();
+
+            const vtuPattern =
+                /^https:\/\/results\.vtu\.ac\.in\/[A-Za-z0-9_-]+\/index\.php$/;
+
+            if (!vtuPattern.test(resultUrl)) {
+                output.innerHTML = `
+            <div class="alert alert-danger mt-3">
+                ❌ <strong>Invalid VTU Result Link</strong><br>
+                Please enter a valid VTU result link.<br>
+                Example:
+                <code>https://results.vtu.ac.in/MJ26cbcs/index.php</code>
+            </div>
+        `;
+
+                return;
+            }
+
             output.innerHTML = "";
             progressSection.style.display = "block";
             downloadBtn.style.display = "none";
